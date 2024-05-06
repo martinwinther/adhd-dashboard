@@ -7,4 +7,4 @@ run "pnpm dev" to run the dev server
 ## Links to look at
 
 - [NextJS-getting-started](https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app)
-- [ShadUI](https://ui.shadcn.com/docs/components/)
+- [ShadUI](https://ui.shadcn.com/docs/components/) -[Beginner's Typescript](https://www.totaltypescript.com/tutorials/beginners-typescript)
