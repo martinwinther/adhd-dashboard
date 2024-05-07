@@ -12,10 +12,10 @@ run "pnpm dev" to run the dev server
 
 ### TODO
 
-[] - create basic todo app
-[] - add tickboxes
-[] - reset button
-[] - previous day finished todos
-[] - connect to database
-[] - add user authentication
-[] - connect database to auth account
+- [] create basic todo app
+- [] add tickboxes
+- [] reset button
+- [] previous day finished todos
+- [] connect to database
+- [] add user authentication
+- [] connect database to auth account
