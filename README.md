@@ -12,10 +12,10 @@ run "pnpm dev" to run the dev server
 
 ### TODO
 
-- [ ] create basic todo app
-- [ ] add tickboxes
-- [ ] reset button
+- [x] create basic todo app
+- [x] add tickboxes
+- [x] reset button
 - [ ] previous day finished todos
-- [ ] connect to database
+- [ ] connect to database - https://supabase.com/
 - [ ] add user authentication
 - [ ] connect database to auth account
