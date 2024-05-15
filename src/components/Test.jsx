@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import TodoSubmitForm from "./TodoSubmitForm";
 
 const Test = () => {
 	const arrayOfDailyTasks = [
@@ -47,6 +48,15 @@ const Test = () => {
 		setDailyTasksYesterday(dailyTasks);
 	};
 
+	const addTask = (taskDescription) => {
+		const newTask = {
+			id: dailyTasks.length + 1,
+			todo: taskDescription,
+			isComplete: false,
+		};
+		setDailyTasks([...dailyTasks, newTask]);
+	};
+
 	const TaskList = ({ tasklist, tasklistYesterday }) => {
 		return (
 			<div className="flex">
@@ -73,11 +83,12 @@ const Test = () => {
 								</li>
 							))}
 						</ul>
-					</div>
-					<div className="flex justify-center pt-1">
-						<Button variant="destructive" onClick={() => handleReset()}>
-							Reset
-						</Button>
+						<TodoSubmitForm addTask={addTask} />
+						<div className="flex justify-center pt-1">
+							<Button variant="destructive" onClick={() => handleReset()}>
+								Reset
+							</Button>
+						</div>
 					</div>
 				</div>
 
