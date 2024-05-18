@@ -1,4 +1,4 @@
-const Todo = () => {
+const WeeklyChecklist = () => {
 	type ToDoElements = {
 		id: number;
 		todo: string;
@@ -45,4 +45,4 @@ const Todo = () => {
 	);
 };
 
-export default Todo;
+export default WeeklyChecklist;

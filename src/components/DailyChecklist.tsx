@@ -1,36 +1,42 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import TodoSubmitForm from "./TodoSubmitForm";
+import TodoSubmitForm from "./DailyChecklistSubmitForm";
 
-const Test = () => {
-	const arrayOfDailyTasks = [
+type Task = {
+	id: number;
+	task: string;
+	isComplete: boolean;
+};
+
+const DailyChecklist = () => {
+	const arrayOfDailyTasks: Task[] = [
 		{
 			id: 1,
-			todo: "Fix the car",
+			task: "Fix the car",
 			isComplete: false,
 		},
 		{
 			id: 2,
-			todo: "Clean the oven",
+			task: "Clean the oven",
 			isComplete: false,
 		},
 		{
 			id: 3,
-			todo: "Go to work",
+			task: "Go to work",
 			isComplete: false,
 		},
 		{
 			id: 4,
-			todo: "Walk the dog",
+			task: "Walk the dog",
 			isComplete: false,
 		},
 	];
 
-	const [dailyTasks, setDailyTasks] = useState(arrayOfDailyTasks);
-	const [dailyTasksYesterday, setDailyTasksYesterday] = useState([]);
+	const [dailyTasks, setDailyTasks] = useState<Task[]>(arrayOfDailyTasks);
+	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<Task[]>([]);
 
-	const toggleComplete = (id) => {
+	const toggleComplete = (id: number) => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
 			if (dailyTask.id === id) {
 				return { ...dailyTask, isComplete: !dailyTask.isComplete };
@@ -48,16 +54,21 @@ const Test = () => {
 		setDailyTasksYesterday(dailyTasks);
 	};
 
-	const addTask = (taskDescription) => {
+	const addTask = (taskDescription: string) => {
 		const newTask = {
 			id: dailyTasks.length + 1,
-			todo: taskDescription,
+			task: taskDescription,
 			isComplete: false,
 		};
 		setDailyTasks([...dailyTasks, newTask]);
 	};
 
-	const TaskList = ({ tasklist, tasklistYesterday }) => {
+	type TaskListProps = {
+		tasklist: Task[];
+		tasklistYesterday: Task[];
+	};
+
+	const TaskList = ({ tasklist, tasklistYesterday }: TaskListProps) => {
 		return (
 			<div className="flex">
 				{/* Left side list */}
@@ -77,7 +88,7 @@ const Test = () => {
 												dailyTask.isComplete ? "line-through ps-1" : " ps-1"
 											}
 										>
-											{dailyTask.todo}
+											{dailyTask.task}
 										</span>
 									</label>
 								</li>
@@ -106,7 +117,7 @@ const Test = () => {
 													: "text-red-400 ps-1"
 											}
 										>
-											{dailyTasksYesterday.todo}
+											{dailyTasksYesterday.task}
 										</span>
 									</label>
 								</li>
@@ -127,4 +138,4 @@ const Test = () => {
 	);
 };
 
-export default Test;
+export default DailyChecklist;

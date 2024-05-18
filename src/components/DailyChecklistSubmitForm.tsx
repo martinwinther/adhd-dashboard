@@ -2,10 +2,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 
-const TodoSubmitForm = ({ addTask }) => {
+type DailyChecklistSubmitFormProps = {
+	addTask: (taskDescription: string) => void;
+};
+
+const DailyChecklistSubmitForm = ({
+	addTask,
+}: DailyChecklistSubmitFormProps) => {
 	const [todoValue, setTodoValue] = useState("");
 
-	const handleSubmit = (event) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault(); // Prevent the default form submission behavior
 		if (todoValue.trim()) {
 			addTask(todoValue);
@@ -23,7 +29,7 @@ const TodoSubmitForm = ({ addTask }) => {
 						name="newTodo"
 						value={todoValue}
 						placeholder="Tasks.."
-						onChange={(e) => setTodoValue(e.target.value)}
+						onChange={(event) => setTodoValue(event.target.value)}
 					/>
 				</label>
 				<div className="flex justify-center pt-1">
@@ -36,4 +42,4 @@ const TodoSubmitForm = ({ addTask }) => {
 	);
 };
 
-export default TodoSubmitForm;
+export default DailyChecklistSubmitForm;

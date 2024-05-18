@@ -16,6 +16,7 @@ run "npm dev" to run the dev server
 - [x] add tickboxes
 - [x] reset button
 - [x] previous day finished todos
-- [ ] connect to database - https://supabase.com/
+- [x] convert to typescript
+- [ ] connect to database
 - [ ] add user authentication
 - [ ] connect database to auth account
