@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import TodoSubmitForm from "./DailyChecklistSubmitForm";
+import { fetchDailyTasks } from "@/lib/data";
 
 type Task = {
 	id: number;
@@ -33,8 +34,16 @@ const DailyChecklist = () => {
 		},
 	];
 
-	const [dailyTasks, setDailyTasks] = useState<Task[]>(arrayOfDailyTasks);
+	const [dailyTasks, setDailyTasks] = useState<Task[]>([]);
 	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<Task[]>([]);
+
+	useEffect(() => {
+		const loadTasks = async () => {
+			const fetchedTasks = await fetchDailyTasks();
+			setDailyTasks(fetchedTasks);
+		};
+		loadTasks();
+	}, []);
 
 	const toggleComplete = (id: number) => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
