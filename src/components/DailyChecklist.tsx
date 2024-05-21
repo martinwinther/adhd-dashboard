@@ -8,6 +8,7 @@ type Task = {
 	id: number;
 	task: string;
 	isComplete: boolean;
+	isCompleteYesterday?: boolean;
 };
 
 const DailyChecklist = () => {
@@ -36,8 +37,8 @@ const DailyChecklist = () => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
 			return { ...dailyTask, isComplete: false };
 		});
-		setDailyTasks(updatedDailyTasks);
-		setDailyTasksYesterday(dailyTasks);
+		setDailyTasks(updatedDailyTasks); // Toggle iscomplete in db
+		setDailyTasksYesterday(dailyTasks); // Toggle iscompleteyesterday in db
 	};
 
 	const addTask = (taskDescription: string) => {
@@ -46,7 +47,7 @@ const DailyChecklist = () => {
 			task: taskDescription,
 			isComplete: false,
 		};
-		setDailyTasks([...dailyTasks, newTask]);
+		setDailyTasks([...dailyTasks, newTask]); //  Add to db
 	};
 
 	type TaskListProps = {

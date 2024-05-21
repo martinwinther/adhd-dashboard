@@ -20,30 +20,3 @@ export async function fetchDailyTasks() {
 		throw new Error("Failed to fetch daily task data." + error);
 	}
 }
-
-/* export function fetchDailyTasks() {
-	const data = [
-		{
-			id: 1,
-			task: "Fix the car",
-			isComplete: false,
-		},
-		{
-			id: 2,
-			task: "Clean the oven",
-			isComplete: false,
-		},
-		{
-			id: 3,
-			task: "Go to work",
-			isComplete: false,
-		},
-		{
-			id: 4,
-			task: "Walk the dog",
-			isComplete: false,
-		},
-	];
-	return data;
-}
- */
