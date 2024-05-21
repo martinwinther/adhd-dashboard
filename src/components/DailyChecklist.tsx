@@ -11,29 +11,6 @@ type Task = {
 };
 
 const DailyChecklist = () => {
-	const arrayOfDailyTasks: Task[] = [
-		{
-			id: 1,
-			task: "Fix the car",
-			isComplete: false,
-		},
-		{
-			id: 2,
-			task: "Clean the oven",
-			isComplete: false,
-		},
-		{
-			id: 3,
-			task: "Go to work",
-			isComplete: false,
-		},
-		{
-			id: 4,
-			task: "Walk the dog",
-			isComplete: false,
-		},
-	];
-
 	const [dailyTasks, setDailyTasks] = useState<Task[]>([]);
 	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<Task[]>([]);
 
