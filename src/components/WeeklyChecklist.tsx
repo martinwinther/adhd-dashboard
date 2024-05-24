@@ -39,7 +39,7 @@ const WeeklyChecklist = () => {
 
 	return (
 		<div className="bg-red-100 border-2 rounded-lg p-2">
-			<h1>This is the todo component</h1>
+			<h1>This is the WeeklyChecklist component</h1>
 			<TodoList todolists={tasks} />
 		</div>
 	);
