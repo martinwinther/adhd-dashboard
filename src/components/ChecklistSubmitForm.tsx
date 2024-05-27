@@ -38,6 +38,14 @@ const DailyChecklistSubmitForm = ({
 		}
 	};
 
+	const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+		if (event.currentTarget === event.target) {
+			setTimeout(() => {
+				setTodoValue("");
+			}, 200);
+		}
+	};
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<label>
@@ -47,13 +55,18 @@ const DailyChecklistSubmitForm = ({
 					name="newTodo"
 					value={todoValue}
 					placeholder="Tasks.."
+					onBlur={handleBlur}
 					onChange={(event) => setTodoValue(event.target.value)}
 				/>
 			</label>
 			<div className="flex justify-center pt-1">
-				<Button type="submit" variant="secondary">
-					Add Task
-				</Button>
+				{todoValue ? (
+					<Button type="submit" variant="secondary">
+						Add Task
+					</Button>
+				) : (
+					" "
+				)}
 			</div>
 		</form>
 	);

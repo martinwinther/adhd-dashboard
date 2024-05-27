@@ -164,8 +164,8 @@ const WeeklyChecklist = () => {
 										</div>
 									</li>
 								))}
+							<ChecklistSubmitForm addTask={addTask} day={day} />
 						</ul>
-						<ChecklistSubmitForm addTask={addTask} day={day} />
 					</div>
 				))}
 			</div>
