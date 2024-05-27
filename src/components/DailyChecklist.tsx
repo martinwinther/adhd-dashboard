@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import TodoSubmitForm from "./DailyChecklistSubmitForm";
+import ChecklistSubmitForm from "./ChecklistSubmitForm";
 import { fetchDailyTasks } from "@/lib/data";
 
 type Task = {
@@ -59,7 +59,7 @@ const DailyChecklist = () => {
 		return (
 			<div className="flex">
 				{/* Left side list */}
-				<div className="border-2 rounded-lg p-2 me-2">
+				<div className="border-2 rounded-lg p-2 ">
 					<div className="">
 						<ul>
 							{tasklist.map((dailyTask) => (
@@ -81,7 +81,7 @@ const DailyChecklist = () => {
 								</li>
 							))}
 						</ul>
-						<TodoSubmitForm addTask={addTask} />
+						<ChecklistSubmitForm addTask={addTask} />
 						<div className="flex justify-center pt-1">
 							<Button variant="destructive" onClick={() => handleReset()}>
 								Reset
@@ -92,7 +92,7 @@ const DailyChecklist = () => {
 
 				{/* Right side list */}
 				{dailyTasksYesterday.length > 0 ? (
-					<div className="border-2 rounded-lg p-2">
+					<div className="border-2 rounded-lg ms-2 p-2">
 						<ul>
 							{tasklistYesterday.map((dailyTasksYesterday) => (
 								<li key={dailyTasksYesterday.id}>
