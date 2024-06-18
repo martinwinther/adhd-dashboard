@@ -18,6 +18,7 @@ const DailyChecklist = () => {
 	useEffect(() => {
 		const loadTasks = async () => {
 			const fetchedTasks = await fetchDailyTasks();
+			// Make a fetch for previous days completed tasks
 			setDailyTasks(fetchedTasks);
 		};
 		loadTasks();

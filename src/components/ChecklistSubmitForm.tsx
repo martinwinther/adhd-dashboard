@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import { createDailyTasks } from "@/lib/data";
 
 type DailyChecklistSubmitFormProps = {
 	addTask: (
@@ -28,20 +29,21 @@ const DailyChecklistSubmitForm = ({
 	addTask,
 	day,
 }: DailyChecklistSubmitFormProps) => {
-	const [todoValue, setTodoValue] = useState("");
+	const [todoValue, setTodoValue] = useState({ id: 0, task: "" });
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault(); // Prevent the default form submission behavior
-		if (todoValue.trim()) {
-			addTask(todoValue, day); // Pass the day if provided
-			setTodoValue(""); // Clear the input after submitting
+		if (todoValue.task.trim()) {
+			createDailyTasks(todoValue.id, todoValue.task);
+			addTask(todoValue.task, day); // Pass the day if provided
+			setTodoValue({ id: 0, task: "" }); // Clear the input after submitting
 		}
 	};
 
 	const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		if (event.currentTarget === event.target) {
 			setTimeout(() => {
-				setTodoValue("");
+				setTodoValue({ id: 0, task: "" });
 			}, 200);
 		}
 	};
@@ -53,14 +55,16 @@ const DailyChecklistSubmitForm = ({
 					key="todo-input"
 					type="text"
 					name="newTodo"
-					value={todoValue}
+					value={todoValue.task}
 					placeholder="Tasks.."
 					onBlur={handleBlur}
-					onChange={(event) => setTodoValue(event.target.value)}
+					onChange={(event) =>
+						setTodoValue({ id: Date.now(), task: event.target.value })
+					}
 				/>
 			</label>
 			<div className="flex justify-center pt-1">
-				{todoValue ? (
+				{todoValue.task ? (
 					<Button type="submit" variant="secondary">
 						Add Task
 					</Button>

@@ -9,6 +9,7 @@ type Task = {
 	isComplete: boolean;
 };
 
+// Daily Tasks
 export async function fetchDailyTasks() {
 	noStore();
 	try {
@@ -18,5 +19,29 @@ export async function fetchDailyTasks() {
 	} catch (error) {
 		console.error("Database Error:", error);
 		throw new Error("Failed to fetch daily task data." + error);
+	}
+}
+
+export async function createDailyTasks(id: number, task: string) {
+	sql<Task>`insert into adhd_dailychecklist (id, task, iscomplete, iscompleteyesterday) values (${id}, ${task}, false, null);`;
+}
+
+export async function resetDailyTasks(
+	id: number,
+	iscomplete: boolean,
+	iscompleteyesterday: boolean,
+) {
+	sql<Task>``; // Make reset db call
+}
+
+// Weekly tasks
+export async function fetchWeeklyTasks() {
+	noStore();
+	try {
+		const result = await sql<Task>`SELECT * FROM adhd_weeklychecklist`;
+		return result.rows;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to fetch weekly task data." + error);
 	}
 }
