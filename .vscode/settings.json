@@ -6,11 +6,5 @@
 	"editor.formatOnSave": true,
 	"eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
 	"typescript.tsdk": "node_modules/typescript/lib",
-	"cSpell.words": [
-		"adhd",
-		"dailychecklist",
-		"iscompleteyesterday",
-		"Kanban",
-		"todolists"
-	]
+	"cSpell.words": ["adhd", "dailychecklist", "Kanban", "todolists"]
 }

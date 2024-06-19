@@ -7,6 +7,7 @@ type Task = {
 	id: number;
 	task: string;
 	isComplete: boolean;
+	isCompleteYesterday: boolean;
 };
 
 // Daily Tasks
@@ -23,17 +24,16 @@ export async function fetchDailyTasks() {
 }
 
 export async function createDailyTasks(id: number, task: string) {
-	sql<Task>`insert into adhd_dailychecklist (id, task, iscomplete, iscompleteyesterday) values (${id}, ${task}, false, null);`;
+	sql<Task>`insert into adhd_dailychecklist (id, task, "isComplete", "isCompleteYesterday") values (${id}, ${task}, false, null);`;
 }
 
 export async function resetDailyTasks(tasks: Task[]) {
 	noStore();
 	try {
-		await Promise.all(
-			tasks.map((task) => {
-				return sql<Task>`UPDATE adhd_dailychecklist SET iscomplete=false, iscompleteyesterday=${task.isComplete} WHERE id=${task.id};`;
-			}),
-		);
+		const updatePromises = tasks.map((task) => {
+			return sql`UPDATE adhd_dailychecklist SET "isComplete" = false, "isCompleteYesterday" = ${task.isCompleteYesterday} WHERE "id" = ${task.id};`;
+		});
+		await Promise.all(updatePromises);
 	} catch (error) {
 		console.error("Database Error:", error);
 		throw new Error("Failed to reset daily task data." + error);

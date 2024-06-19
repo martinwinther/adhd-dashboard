@@ -20,6 +20,8 @@ const DailyChecklist = () => {
 			const fetchedTasks = await fetchDailyTasks();
 			// Make a fetch for previous days completed tasks
 			setDailyTasks(fetchedTasks);
+			setDailyTasksYesterday(fetchedTasks);
+			console.log("Fetched daily tasks:", fetchedTasks);
 		};
 		loadTasks();
 	}, []);
@@ -35,27 +37,35 @@ const DailyChecklist = () => {
 	};
 
 	const handleReset = async () => {
-		// Filter out the tasks that were completed
-		const completedTasks = dailyTasks.filter((task) => task.isComplete);
-
-		// Prepare tasks with updated 'isCompleteYesterday' based on their current 'isComplete'
-		const resetTasks = dailyTasks.map((task) => ({
+		// Create a new array that includes updates for isCompleteYesterday before resetting isComplete
+		const updatedTasks = dailyTasks.map((task) => ({
 			...task,
-			isCompleteYesterday: task.isComplete,
-			isComplete: false,
+			isCompleteYesterday: task.isComplete, // Update based on current isComplete
+			isComplete: false, // Reset isComplete
 		}));
 
 		try {
-			// Call the resetDailyTasks function with the prepared list
-			await resetDailyTasks(dailyTasks); // Pass the entire list, function handles the logic
+			// Pass the updated tasks array to reset in the database
+			await resetDailyTasks(updatedTasks); // Make sure this function uses the updated isCompleteYesterday correctly
 
-			// Update state with the new task data
-			setDailyTasks(resetTasks);
-			setDailyTasksYesterday(dailyTasks); // Optionally, update the 'yesterday' list to show only previously completed tasks
+			// Update state with the newly updated tasks
+			setDailyTasks(
+				updatedTasks.map((task) => ({
+					...task,
+					isComplete: false, // Ensure isComplete is false for all, even though it should already be set
+				})),
+			);
+
+			// Update dailyTasksYesterday with the tasks as they were before today's reset
+			setDailyTasksYesterday(updatedTasks);
 		} catch (error) {
 			console.error("Error resetting tasks:", error);
-			// Optionally, handle errors in the UI
 		}
+	};
+
+	const handleTest = () => {
+		console.log(dailyTasksYesterday[0].isCompleteYesterday);
+		console.log(dailyTasks);
 	};
 
 	const handleDelete = () => {
@@ -117,6 +127,9 @@ const DailyChecklist = () => {
 							<Button variant="destructive" onClick={() => handleDelete()}>
 								Delete
 							</Button>
+							<Button variant="destructive" onClick={() => handleTest()}>
+								Test
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -130,7 +143,7 @@ const DailyChecklist = () => {
 									<label className="cursor-pointer">
 										<span
 											className={
-												dailyTasksYesterday.isComplete
+												dailyTasksYesterday.isCompleteYesterday
 													? "line-through ps-1"
 													: "text-red-400 ps-1"
 											}
