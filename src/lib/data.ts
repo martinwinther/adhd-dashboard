@@ -34,6 +34,18 @@ export async function resetDailyTasks(
 	sql<Task>``; // Make reset db call
 }
 
+export async function deleteDailyTasks(ids: number[]) {
+	noStore();
+	try {
+		ids.map((id) => {
+			sql<Task>`delete from adhd_dailychecklist where id = ${id};`;
+		});
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to delete daily task data." + error);
+	}
+}
+
 // Weekly tasks
 export async function fetchWeeklyTasks() {
 	noStore();

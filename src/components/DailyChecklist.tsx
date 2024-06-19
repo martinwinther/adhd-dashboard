@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ChecklistSubmitForm from "./ChecklistSubmitForm";
-import { fetchDailyTasks } from "@/lib/data";
+import { deleteDailyTasks, fetchDailyTasks } from "@/lib/data";
 
 type Task = {
 	id: number;
@@ -40,6 +40,17 @@ const DailyChecklist = () => {
 		});
 		setDailyTasks(updatedDailyTasks); // Toggle iscomplete in db
 		setDailyTasksYesterday(dailyTasks); // Toggle iscompleteyesterday in db
+	};
+
+	const handleDelete = () => {
+		const tasksToDelete = dailyTasks.filter(
+			(dailyTask) => dailyTask.isComplete,
+		);
+		const deleteIds = tasksToDelete.map((task) => {
+			return task.id;
+		});
+		deleteDailyTasks(deleteIds);
+		setDailyTasks([...dailyTasks.filter((task) => !task.isComplete)]);
 	};
 
 	const addTask = (taskDescription: string) => {
@@ -86,6 +97,9 @@ const DailyChecklist = () => {
 						<div className="flex justify-center pt-1">
 							<Button variant="destructive" onClick={() => handleReset()}>
 								Reset
+							</Button>
+							<Button variant="destructive" onClick={() => handleDelete()}>
+								Delete
 							</Button>
 						</div>
 					</div>
