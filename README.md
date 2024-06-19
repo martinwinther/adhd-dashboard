@@ -17,6 +17,13 @@ run "npm dev" to run the dev server
 - [x] reset button
 - [x] previous day finished todos
 - [x] convert to typescript
-- [ ] connect to database
+- [x] connect to database
+- [ ]Fix weekly database connection
+  - [ ] Create the database
+  - [x] Select
+  - [ ] Insert
+  - [ ] Update
+  - [ ] Delete
+- [ ] Restructure and cleanup components
 - [ ] add user authentication
 - [ ] connect database to auth account
