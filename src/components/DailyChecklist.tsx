@@ -63,10 +63,10 @@ const DailyChecklist = () => {
 		}
 	};
 
-	const handleTest = () => {
+	/* 	const handleTest = () => {
 		console.log(dailyTasksYesterday[0].isCompleteYesterday);
 		console.log(dailyTasks);
-	};
+	}; */
 
 	const handleDelete = () => {
 		const tasksToDelete = dailyTasks.filter(
@@ -127,9 +127,9 @@ const DailyChecklist = () => {
 							<Button variant="destructive" onClick={() => handleDelete()}>
 								Delete
 							</Button>
-							<Button variant="destructive" onClick={() => handleTest()}>
+							{/* 					<Button variant="destructive" onClick={() => handleTest()}>
 								Test
-							</Button>
+							</Button> */}
 						</div>
 					</div>
 				</div>
