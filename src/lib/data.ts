@@ -26,12 +26,18 @@ export async function createDailyTasks(id: number, task: string) {
 	sql<Task>`insert into adhd_dailychecklist (id, task, iscomplete, iscompleteyesterday) values (${id}, ${task}, false, null);`;
 }
 
-export async function resetDailyTasks(
-	id: number,
-	iscomplete: boolean,
-	iscompleteyesterday: boolean,
-) {
-	sql<Task>``; // Make reset db call
+export async function resetDailyTasks(tasks: Task[]) {
+	noStore();
+	try {
+		await Promise.all(
+			tasks.map((task) => {
+				return sql<Task>`UPDATE adhd_dailychecklist SET iscomplete=false, iscompleteyesterday=${task.isComplete} WHERE id=${task.id};`;
+			}),
+		);
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to reset daily task data." + error);
+	}
 }
 
 export async function deleteDailyTasks(ids: number[]) {

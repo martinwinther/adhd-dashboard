@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ChecklistSubmitForm from "./ChecklistSubmitForm";
-import { deleteDailyTasks, fetchDailyTasks } from "@/lib/data";
+import { deleteDailyTasks, fetchDailyTasks, resetDailyTasks } from "@/lib/data";
 
 type Task = {
 	id: number;
@@ -34,12 +34,28 @@ const DailyChecklist = () => {
 		setDailyTasks(updatedDailyTasks);
 	};
 
-	const handleReset = () => {
-		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
-			return { ...dailyTask, isComplete: false };
-		});
-		setDailyTasks(updatedDailyTasks); // Toggle iscomplete in db
-		setDailyTasksYesterday(dailyTasks); // Toggle iscompleteyesterday in db
+	const handleReset = async () => {
+		// Filter out the tasks that were completed
+		const completedTasks = dailyTasks.filter((task) => task.isComplete);
+
+		// Prepare tasks with updated 'isCompleteYesterday' based on their current 'isComplete'
+		const resetTasks = dailyTasks.map((task) => ({
+			...task,
+			isCompleteYesterday: task.isComplete,
+			isComplete: false,
+		}));
+
+		try {
+			// Call the resetDailyTasks function with the prepared list
+			await resetDailyTasks(dailyTasks); // Pass the entire list, function handles the logic
+
+			// Update state with the new task data
+			setDailyTasks(resetTasks);
+			setDailyTasksYesterday(dailyTasks); // Optionally, update the 'yesterday' list to show only previously completed tasks
+		} catch (error) {
+			console.error("Error resetting tasks:", error);
+			// Optionally, handle errors in the UI
+		}
 	};
 
 	const handleDelete = () => {
