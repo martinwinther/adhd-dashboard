@@ -1,15 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import ChecklistSubmitForm from "./ChecklistSubmitForm";
-import { deleteDailyTasks, fetchDailyTasks, resetDailyTasks } from "@/lib/data";
-
-type Task = {
-	id: number;
-	task: string;
-	isComplete: boolean;
-	isCompleteYesterday?: boolean;
-};
+import ChecklistSubmitForm from "./DailyChecklistSubmitForm";
+import {
+	deleteDailyTasks,
+	fetchDailyTasks,
+	resetDailyTasks,
+	updateDailyTasks,
+} from "@/lib/data";
+import { Task } from "@/lib/types";
 
 const DailyChecklist = () => {
 	const [dailyTasks, setDailyTasks] = useState<Task[]>([]);
@@ -26,13 +25,15 @@ const DailyChecklist = () => {
 		loadTasks();
 	}, []);
 
-	const toggleComplete = (id: number) => {
+	const toggleComplete = (id: number, isComplete: boolean) => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
 			if (dailyTask.id === id) {
 				return { ...dailyTask, isComplete: !dailyTask.isComplete };
 			}
+
 			return dailyTask;
 		});
+		updateDailyTasks(id, isComplete);
 		setDailyTasks(updatedDailyTasks);
 	};
 
@@ -79,9 +80,9 @@ const DailyChecklist = () => {
 		setDailyTasks([...dailyTasks.filter((task) => !task.isComplete)]);
 	};
 
-	const addTask = (taskDescription: string) => {
+	const addTask = (id: number, taskDescription: string) => {
 		const newTask = {
-			id: dailyTasks.length + 1,
+			id: id,
 			task: taskDescription,
 			isComplete: false,
 		};
@@ -106,7 +107,9 @@ const DailyChecklist = () => {
 										<input
 											type="checkbox"
 											checked={dailyTask.isComplete}
-											onChange={() => toggleComplete(dailyTask.id)}
+											onChange={() =>
+												toggleComplete(dailyTask.id, dailyTask.isComplete)
+											}
 										/>
 										<span
 											className={

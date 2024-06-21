@@ -1,133 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import ChecklistSubmitForm from "./ChecklistSubmitForm";
+import ChecklistSubmitForm from "./WeeklyChecklistSubmitForm";
+import { fetchWeeklyTasks } from "@/lib/data";
+import { Day, TaskWithDay } from "@/lib/types";
 
 const WeeklyChecklist = () => {
-	const [weeklyTasks, setWeeklyTasks] = useState<ToDoElements[]>([
-		{
-			id: 1,
-			task: "Fix the car",
-			isComplete: false,
-			day: "monday",
-		},
-		{
-			id: 2,
-			task: "Clean the oven",
-			isComplete: false,
-			day: "monday",
-		},
-		{
-			id: 3,
-			task: "Go to work",
-			isComplete: false,
-			day: "tuesday",
-		},
-		{
-			id: 4,
-			task: "Walk the dog",
-			isComplete: false,
-			day: "wednesday",
-		},
-		{
-			id: 5,
-			task: "Play Super smash bros",
-			isComplete: false,
-			day: "friday",
-		},
-		{
-			id: 6,
-			task: "Throw darts with the boys",
-			isComplete: false,
-			day: "friday",
-		},
-		{
-			id: 7,
-			task: "Workout",
-			isComplete: false,
-			day: "tuesday",
-		},
-		{
-			id: 8,
-			task: "Walk the dog",
-			isComplete: false,
-			day: "wednesday",
-		},
-		{
-			id: 9,
-			task: "Workout",
-			isComplete: false,
-			day: "thursday",
-		},
-		{
-			id: 10,
-			task: "Play Super smash bros",
-			isComplete: false,
-			day: "thursday",
-		},
-		{
-			id: 11,
-			task: "Play Super smash bros",
-			isComplete: false,
-			day: "friday",
-		},
-		{
-			id: 12,
-			task: "Therapy session",
-			isComplete: false,
-			day: "friday",
-		},
-		{
-			id: 13,
-			task: "Hearthstone",
-			isComplete: false,
-			day: "saturday",
-		},
-		{
-			id: 14,
-			task: "Play Super smash bros",
-			isComplete: false,
-			day: "sunday",
-		},
-		{
-			id: 15,
-			task: "Open new packs",
-			isComplete: false,
-			day: "sunday",
-		},
-	]);
+	const [weeklyTasks, setWeeklyTasks] = useState<TaskWithDay[]>([]);
 
-	type ToDoElements = {
-		id: number;
-		task: string;
-		isComplete: boolean;
-		day:
-			| "monday"
-			| "tuesday"
-			| "wednesday"
-			| "thursday"
-			| "friday"
-			| "saturday"
-			| "sunday";
-	};
+	useEffect(() => {
+		const loadTasks = async () => {
+			const fetchedTasks = await fetchWeeklyTasks();
+			// Make a fetch for previous days completed tasks
+			setWeeklyTasks(fetchedTasks);
+			console.log("Fetched weekly tasks:", fetchedTasks);
+		};
+		loadTasks();
+	}, []);
 
-	const addTask = (
-		taskDescription: string,
-		day:
-			| "monday"
-			| "tuesday"
-			| "wednesday"
-			| "thursday"
-			| "friday"
-			| "saturday"
-			| "sunday"
-			| undefined,
-	) => {
+	const addTask = (id: number, taskDescription: string, day: Day) => {
 		if (!day) {
 			console.error("Day must be provided for the task");
 			return; // Or handle the case where day is undefined
 		}
 		const newTask = {
-			id: weeklyTasks.length + 1,
+			id: id,
 			task: taskDescription,
 			isComplete: false,
 			day: day,
@@ -135,7 +31,7 @@ const WeeklyChecklist = () => {
 		setWeeklyTasks([...weeklyTasks, newTask]);
 	};
 
-	const daysOfWeek: ToDoElements["day"][] = [
+	const daysOfWeek: TaskWithDay["day"][] = [
 		"monday",
 		"tuesday",
 		"wednesday",
@@ -155,7 +51,7 @@ const WeeklyChecklist = () => {
 		setWeeklyTasks(updatedWeeklyTasks);
 	};
 
-	const TodoList = ({ todolists }: { todolists: ToDoElements[] }) => {
+	const TodoList = ({ todolists }: { todolists: TaskWithDay[] }) => {
 		return (
 			<div className="flex flex-col md:flex-row justify-between space-y-2 md:space-x-2 md:space-y-0 items-stretch">
 				{daysOfWeek.map((day) => (

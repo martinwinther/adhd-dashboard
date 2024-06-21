@@ -2,20 +2,15 @@
 
 import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
-
-type Task = {
-	id: number;
-	task: string;
-	isComplete: boolean;
-	isCompleteYesterday: boolean;
-};
+import { Day, Task, TaskWithDay } from "@/lib/types";
 
 // Daily Tasks
 export async function fetchDailyTasks() {
 	noStore();
 	try {
 		// Using 'await' directly within the sql query execution to wait for the promise to resolve
-		const result = await sql<Task>`SELECT * FROM adhd_dailychecklist`;
+		const result =
+			await sql<Task>`SELECT * FROM adhd_dailychecklist ORDER BY id`;
 		return result.rows;
 	} catch (error) {
 		console.error("Database Error:", error);
@@ -25,6 +20,22 @@ export async function fetchDailyTasks() {
 
 export async function createDailyTasks(id: number, task: string) {
 	sql<Task>`insert into adhd_dailychecklist (id, task, "isComplete", "isCompleteYesterday") values (${id}, ${task}, false, null);`;
+}
+
+export async function updateDailyTasks(id: number, isComplete: boolean) {
+	noStore();
+	try {
+		if (!isComplete) {
+			sql<Task>`UPDATE adhd_dailychecklist SET "isComplete" = true WHERE "id" = ${id};`;
+			console.log("set to true");
+		} else {
+			sql<Task>`UPDATE adhd_dailychecklist SET "isComplete" = false WHERE "id" = ${id};`;
+			console.log("set to false");
+		}
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to update daily task data." + error);
+	}
 }
 
 export async function resetDailyTasks(tasks: Task[]) {
@@ -56,10 +67,14 @@ export async function deleteDailyTasks(ids: number[]) {
 export async function fetchWeeklyTasks() {
 	noStore();
 	try {
-		const result = await sql<Task>`SELECT * FROM adhd_weeklychecklist`;
+		const result = await sql<TaskWithDay>`SELECT * FROM adhd_weeklychecklist`;
 		return result.rows;
 	} catch (error) {
 		console.error("Database Error:", error);
 		throw new Error("Failed to fetch weekly task data." + error);
 	}
+}
+
+export async function createWeeklyTasks(id: number, task: string, day: Day) {
+	sql<Task>`insert into adhd_weeklychecklist (id, task, "isComplete", "day") values (${id}, ${task}, false, ${day});`;
 }

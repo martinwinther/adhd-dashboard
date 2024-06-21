@@ -4,30 +4,11 @@ import React, { useState } from "react";
 import { createDailyTasks } from "@/lib/data";
 
 type DailyChecklistSubmitFormProps = {
-	addTask: (
-		taskDescription: string,
-		day?:
-			| "monday"
-			| "tuesday"
-			| "wednesday"
-			| "thursday"
-			| "friday"
-			| "saturday"
-			| "sunday",
-	) => void;
-	day?:
-		| "monday"
-		| "tuesday"
-		| "wednesday"
-		| "thursday"
-		| "friday"
-		| "saturday"
-		| "sunday"; // Optional day property
+	addTask: (id: number, taskDescription: string) => void;
 };
 
 const DailyChecklistSubmitForm = ({
 	addTask,
-	day,
 }: DailyChecklistSubmitFormProps) => {
 	const [todoValue, setTodoValue] = useState("");
 
@@ -36,7 +17,7 @@ const DailyChecklistSubmitForm = ({
 		const id = Date.now();
 		if (todoValue.trim()) {
 			createDailyTasks(id, todoValue);
-			addTask(todoValue, day); // Pass the day if provided
+			addTask(id, todoValue);
 			setTodoValue(""); // Clear the input after submitting
 		}
 	};

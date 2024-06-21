@@ -19,9 +19,9 @@ run "npm dev" to run the dev server
 - [x] convert to typescript
 - [x] connect to database
 - [ ] Fix weekly database connection
-  - [ ] Create the database
+  - [x] Create the database
   - [x] Select
-  - [ ] Insert
+  - [x] Insert
   - [ ] Update
   - [ ] Delete
 - [ ] Restructure and cleanup components
