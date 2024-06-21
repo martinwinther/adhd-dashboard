@@ -145,6 +145,16 @@ const WeeklyChecklist = () => {
 		"sunday",
 	];
 
+	const toggleComplete = (id: number) => {
+		const updatedWeeklyTasks = weeklyTasks.map((weeklyTask) => {
+			if (weeklyTask.id === id) {
+				return { ...weeklyTask, isComplete: !weeklyTask.isComplete };
+			}
+			return weeklyTask;
+		});
+		setWeeklyTasks(updatedWeeklyTasks);
+	};
+
 	const TodoList = ({ todolists }: { todolists: ToDoElements[] }) => {
 		return (
 			<div className="flex flex-col md:flex-row justify-between space-y-2 md:space-x-2 md:space-y-0 items-stretch">
@@ -153,15 +163,32 @@ const WeeklyChecklist = () => {
 						<div className="text-lg font-bold">{day}</div>
 						<ul className="flex-1 border-2 border-black p-2 flex flex-col">
 							{todolists
-								.filter((task) => task.day === day)
-								.map((task) => (
-									<li key={task.id} className="mt-1 border border-black">
-										<div className="flex items-center justify-between">
-											<span className="flex-1">{task.task}</span>
-											<Button className="m-2 h-8 w-8" variant="destructive">
-												X
-											</Button>
-										</div>
+								.filter((weeklyTask) => weeklyTask.day === day)
+								.map((weeklyTask) => (
+									<li key={weeklyTask.id} className="mt-1 border border-black">
+										<label className="cursor-pointer">
+											<div className="flex items-center justify-between ps-2">
+												<div>
+													<input
+														type="checkbox"
+														checked={weeklyTask.isComplete}
+														onChange={() => toggleComplete(weeklyTask.id)}
+													/>
+													<span
+														className={
+															weeklyTask.isComplete
+																? "line-through ps-1"
+																: " ps-1"
+														}
+													>
+														{weeklyTask.task}
+													</span>
+												</div>
+												<Button className="m-2 h-8 w-8" variant="destructive">
+													X
+												</Button>
+											</div>
+										</label>
 									</li>
 								))}
 							<ChecklistSubmitForm addTask={addTask} day={day} />

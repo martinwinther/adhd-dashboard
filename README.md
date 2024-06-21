@@ -18,7 +18,7 @@ run "npm dev" to run the dev server
 - [x] previous day finished todos
 - [x] convert to typescript
 - [x] connect to database
-- [ ]Fix weekly database connection
+- [ ] Fix weekly database connection
   - [ ] Create the database
   - [x] Select
   - [ ] Insert
