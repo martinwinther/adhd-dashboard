@@ -1,11 +1,11 @@
 "use client";
 
 import Navigation from "@/components/Navigation";
-import Kanban from "@/components/Kanban";
-import WeeklyChecklist from "@/components/WeeklyChecklist";
-import DailyCheckList from "@/components/DailyChecklist";
+import Kanban from "@/app/dashboard/Kanban";
+import WeeklyChecklist from "@/app/dashboard/WeeklyChecklist";
+import DailyCheckList from "@/app/dashboard/DailyChecklist";
 import Footer from "@/components/Footer";
-import TodaysList from "@/components/TodaysList";
+import TodaysList from "@/app/dashboard/TodaysList";
 
 export default function Home() {
 	return (

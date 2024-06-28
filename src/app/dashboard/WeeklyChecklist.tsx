@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import ChecklistSubmitForm from "./WeeklyChecklistSubmitForm";
+import { Button } from "../../components/ui/button";
+import WeeklySubmit from "../../components/ui/WeeklySubmit";
 import {
 	fetchWeeklyTasks,
 	updateWeeklyTasks,
@@ -127,7 +127,7 @@ const WeeklyChecklist = () => {
 										</label>
 									</li>
 								))}
-							<ChecklistSubmitForm addTask={addTask} day={day} />
+							<WeeklySubmit addTask={addTask} day={day} />
 						</ul>
 					</div>
 				))}

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import ChecklistSubmitForm from "./DailyChecklistSubmitForm";
+import DailySubmit from "../../components/ui/DailySubmit";
 import {
 	deleteDailyTasks,
 	fetchDailyTasks,
@@ -122,7 +122,7 @@ const DailyChecklist = () => {
 								</li>
 							))}
 						</ul>
-						<ChecklistSubmitForm addTask={addTask} />
+						<DailySubmit addTask={addTask} />
 						<div className="flex justify-center pt-1">
 							<Button variant="destructive" onClick={() => handleReset()}>
 								Reset

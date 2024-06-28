@@ -24,6 +24,6 @@ run "npm dev" to run the dev server
   - [x] Insert
   - [x] Update
   - [x] Delete
-- [ ] Restructure and cleanup components
+- [x] Restructure and cleanup components
 - [ ] add user authentication
 - [ ] connect database to auth account
