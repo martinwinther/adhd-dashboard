@@ -22,8 +22,8 @@ run "npm dev" to run the dev server
   - [x] Create the database
   - [x] Select
   - [x] Insert
-  - [ ] Update
-  - [ ] Delete
+  - [x] Update
+  - [x] Delete
 - [ ] Restructure and cleanup components
 - [ ] add user authentication
 - [ ] connect database to auth account

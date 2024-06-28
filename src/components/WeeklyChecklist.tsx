@@ -5,6 +5,7 @@ import {
 	fetchWeeklyTasks,
 	updateWeeklyTasks,
 	resetWeeklyTasks,
+	deleteWeeklyTasks,
 } from "@/lib/data";
 import { Day, TaskWithDay } from "@/lib/types";
 
@@ -63,6 +64,12 @@ const WeeklyChecklist = () => {
 		setWeeklyTasks(fetchedTasks);
 	};
 
+	const handleDelete = async (id: number) => {
+		await deleteWeeklyTasks(id);
+		const fetchedTasks = await fetchWeeklyTasks();
+		setWeeklyTasks(fetchedTasks);
+	};
+
 	const TodoList = ({ todolists }: { todolists: TaskWithDay[] }) => {
 		return (
 			<div className="flex flex-col md:flex-row justify-between space-y-2 md:space-x-2 md:space-y-0 items-stretch">
@@ -109,7 +116,11 @@ const WeeklyChecklist = () => {
 														{weeklyTask.task}
 													</span>
 												</div>
-												<Button className="m-2 h-8 w-8" variant="destructive">
+												<Button
+													className="m-2 h-8 w-8"
+													variant="destructive"
+													onClick={() => handleDelete(weeklyTask.id)}
+												>
 													X
 												</Button>
 											</div>

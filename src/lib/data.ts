@@ -106,6 +106,12 @@ export async function resetWeeklyTasks() {
 	}
 }
 
-export async function deleteWeeklyTasks() {
+export async function deleteWeeklyTasks(id: number) {
 	noStore();
+	try {
+		return sql<Task>`delete from adhd_weeklychecklist where id = ${id};`;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to delete weekly task data." + error);
+	}
 }
