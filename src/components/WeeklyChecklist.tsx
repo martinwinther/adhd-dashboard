@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import ChecklistSubmitForm from "./WeeklyChecklistSubmitForm";
-import { fetchWeeklyTasks } from "@/lib/data";
+import { fetchWeeklyTasks, updateWeeklyTasks } from "@/lib/data";
 import { Day, TaskWithDay } from "@/lib/types";
 
 const WeeklyChecklist = () => {
@@ -41,13 +41,14 @@ const WeeklyChecklist = () => {
 		"sunday",
 	];
 
-	const toggleComplete = (id: number) => {
+	const toggleComplete = (id: number, isComplete: boolean) => {
 		const updatedWeeklyTasks = weeklyTasks.map((weeklyTask) => {
 			if (weeklyTask.id === id) {
 				return { ...weeklyTask, isComplete: !weeklyTask.isComplete };
 			}
 			return weeklyTask;
 		});
+		updateWeeklyTasks(id, isComplete);
 		setWeeklyTasks(updatedWeeklyTasks);
 	};
 

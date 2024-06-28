@@ -67,7 +67,8 @@ export async function deleteDailyTasks(ids: number[]) {
 export async function fetchWeeklyTasks() {
 	noStore();
 	try {
-		const result = await sql<TaskWithDay>`SELECT * FROM adhd_weeklychecklist`;
+		const result =
+			await sql<TaskWithDay>`SELECT * FROM adhd_weeklychecklist ORDER BY id`;
 		return result.rows;
 	} catch (error) {
 		console.error("Database Error:", error);
@@ -77,4 +78,24 @@ export async function fetchWeeklyTasks() {
 
 export async function createWeeklyTasks(id: number, task: string, day: Day) {
 	sql<Task>`insert into adhd_weeklychecklist (id, task, "isComplete", "day") values (${id}, ${task}, false, ${day});`;
+}
+
+export async function updateWeeklyTasks(id: number, isComplete: boolean) {
+	noStore();
+	try {
+		if (!isComplete) {
+			sql<Task>`UPDATE adhd_weeklychecklist SET "isComplete" = true WHERE "id" = ${id};`;
+			console.log("set to true");
+		} else {
+			sql<Task>`UPDATE adhd_weeklychecklist SET "isComplete" = false WHERE "id" = ${id};`;
+			console.log("set to false");
+		}
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to update weekly task data." + error);
+	}
+}
+
+export async function deleteWeeklyTasks() {
+	noStore();
 }
