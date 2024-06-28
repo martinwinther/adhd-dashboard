@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import ChecklistSubmitForm from "./WeeklyChecklistSubmitForm";
-import { fetchWeeklyTasks, updateWeeklyTasks } from "@/lib/data";
+import {
+	fetchWeeklyTasks,
+	updateWeeklyTasks,
+	resetWeeklyTasks,
+} from "@/lib/data";
 import { Day, TaskWithDay } from "@/lib/types";
 
 const WeeklyChecklist = () => {
@@ -52,12 +56,31 @@ const WeeklyChecklist = () => {
 		setWeeklyTasks(updatedWeeklyTasks);
 	};
 
+	const handleReset = async () => {
+		await resetWeeklyTasks();
+		const fetchedTasks = await fetchWeeklyTasks();
+		// Make a fetch for previous days completed tasks
+		setWeeklyTasks(fetchedTasks);
+	};
+
 	const TodoList = ({ todolists }: { todolists: TaskWithDay[] }) => {
 		return (
 			<div className="flex flex-col md:flex-row justify-between space-y-2 md:space-x-2 md:space-y-0 items-stretch">
 				{daysOfWeek.map((day) => (
 					<div key={day} className="flex-1 flex flex-col">
-						<div className="text-lg font-bold">{day}</div>
+						<div className="flex items-center justify-between">
+							<div className="text-lg font-bold">{day}</div>
+							{day === "sunday" && (
+								<Button
+									className=" px-6 h-6 w-6"
+									variant="destructive"
+									onClick={() => handleReset()}
+								>
+									Reset
+								</Button>
+							)}
+						</div>
+
 						<ul className="flex-1 border-2 border-black p-2 flex flex-col">
 							{todolists
 								.filter((weeklyTask) => weeklyTask.day === day)
@@ -69,7 +92,12 @@ const WeeklyChecklist = () => {
 													<input
 														type="checkbox"
 														checked={weeklyTask.isComplete}
-														onChange={() => toggleComplete(weeklyTask.id)}
+														onChange={() =>
+															toggleComplete(
+																weeklyTask.id,
+																weeklyTask.isComplete,
+															)
+														}
 													/>
 													<span
 														className={

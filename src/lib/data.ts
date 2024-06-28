@@ -96,6 +96,16 @@ export async function updateWeeklyTasks(id: number, isComplete: boolean) {
 	}
 }
 
+export async function resetWeeklyTasks() {
+	noStore();
+	try {
+		return sql`UPDATE adhd_weeklychecklist SET "isComplete" = false`;
+	} catch (error) {
+		console.error("Database Error:", error);
+		throw new Error("Failed to reset weekly task data." + error);
+	}
+}
+
 export async function deleteWeeklyTasks() {
 	noStore();
 }
