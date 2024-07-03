@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { TrashIcon } from "@heroicons/react/24/outline";
+
 import { Button } from "../../components/ui/button";
 import WeeklySubmit from "../../components/ui/WeeklySubmit";
 import {
@@ -121,7 +123,9 @@ const WeeklyChecklist = () => {
 													variant="destructive"
 													onClick={() => handleDelete(weeklyTask.id)}
 												>
-													X
+													<span>
+														<TrashIcon className="size-6" />
+													</span>
 												</Button>
 											</div>
 										</label>
