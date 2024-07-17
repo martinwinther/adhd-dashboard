@@ -29,7 +29,12 @@ run "npm dev" to run the dev server
   - [ ] connect users to checklist tables
   - [ ] create providers for auth
   - [ ] add login screen
+- [ ] add character limit to input
 - [ ] create kanban board
 - [ ] crate daily list
 - [ ] switch to shadcn where applicable
 - [ ] finish styling
+
+not signed in: login, signup
+signed in: dashboard
+dashboard - filter tasks by user_id

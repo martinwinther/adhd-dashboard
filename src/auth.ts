@@ -8,5 +8,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth(() => {
 	return {
 		adapter: PostgresAdapter(pool),
 		providers: [github],
+		callbacks: {
+			authorized: async ({ auth }) => {
+				// Logged in users are authenticated, otherwise redirect to login page
+				return !!auth;
+			},
+		},
 	};
 });
