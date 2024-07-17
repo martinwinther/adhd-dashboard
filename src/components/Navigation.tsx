@@ -1,7 +1,9 @@
 "use client";
 
-import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
+import { User } from "lucide-react";
 import React, { useEffect, useState } from "react";
+
+import Navbar from "./Navbar";
 
 //component declaration
 
@@ -22,22 +24,12 @@ const Navigation = () => {
 		setAuthenticationStatus(!authenticationStatus);
 		console.log(authenticationStatus);
 	};
-	const name = "Martin";
 
 	return (
-		<nav className="flex justify-between items-center px-2 w-full h-12 bg-gray-900 text-white">
-			<h1 className="">ADHD - Dashboard</h1>
-
-			<button onClick={toggleAuthentication}>
-				{authenticationStatus ? (
-					<div className="flex items-center">
-						User: {name} <PowerIcon className="ms-2 w-6 h-6 text-white" />
-					</div>
-				) : (
-					<UserPlusIcon className="size-6 text-white" />
-				)}
-			</button>
-		</nav>
+		<Navbar
+			authenticationStatus={authenticationStatus}
+			toggleAuthentication={toggleAuthentication}
+		/>
 	);
 };
 
