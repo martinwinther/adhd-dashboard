@@ -4,6 +4,8 @@ import { sql } from "@vercel/postgres";
 import { unstable_noStore as noStore } from "next/cache";
 import { Day, Task, TaskWithDay } from "@/lib/types";
 
+// this file contains all the functions that interact with the database
+
 // Daily Tasks
 export async function fetchDailyTasks() {
 	noStore();

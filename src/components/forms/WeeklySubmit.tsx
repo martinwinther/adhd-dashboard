@@ -19,12 +19,14 @@ const WeeklyChecklistSubmitForm = ({
 		event.preventDefault(); // Prevent the default form submission behavior
 		const id = Date.now();
 		if (todoValue.trim()) {
-			createWeeklyTasks(id, todoValue, day);
-			addTask(id, todoValue, day);
+			// checks if the input is not empty
+			createWeeklyTasks(id, todoValue, day); // creates a new task in the database
+			addTask(id, todoValue, day); // adds the task to the state
 			setTodoValue(""); // Clear the input after submitting
 		}
 	};
 
+	// clears the input after it is no longer selected
 	const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		if (event.currentTarget === event.target) {
 			setTimeout(() => {
@@ -47,7 +49,7 @@ const WeeklyChecklistSubmitForm = ({
 				/>
 			</label>
 			<div className="flex justify-center pt-1">
-				{todoValue ? (
+				{todoValue /* Only renders the Add Task button if the input is not empty */ ? (
 					<Button type="submit" variant="secondary">
 						Add Task
 					</Button>

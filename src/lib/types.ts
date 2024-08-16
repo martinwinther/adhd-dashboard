@@ -1,3 +1,5 @@
+// this contains all the types used in the application
+
 export interface Task {
 	id: number;
 	task: string;

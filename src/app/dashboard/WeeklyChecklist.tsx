@@ -14,6 +14,7 @@ import { Day, TaskWithDay } from "@/lib/types";
 const WeeklyChecklist = () => {
 	const [weeklyTasks, setWeeklyTasks] = useState<TaskWithDay[]>([]);
 
+	// when the component loads, the daily tasks are fetched from the database and stored in the state
 	useEffect(() => {
 		const loadTasks = async () => {
 			const fetchedTasks = await fetchWeeklyTasks();
@@ -24,11 +25,8 @@ const WeeklyChecklist = () => {
 		loadTasks();
 	}, []);
 
+	// tells the WeeklySubmit component to add a new task to the database and updates the state with the new task
 	const addTask = (id: number, taskDescription: string, day: Day) => {
-		if (!day) {
-			console.error("Day must be provided for the task");
-			return; // Or handle the case where day is undefined
-		}
 		const newTask = {
 			id: id,
 			task: taskDescription,
@@ -37,16 +35,6 @@ const WeeklyChecklist = () => {
 		};
 		setWeeklyTasks([...weeklyTasks, newTask]);
 	};
-
-	const daysOfWeek: TaskWithDay["day"][] = [
-		"monday",
-		"tuesday",
-		"wednesday",
-		"thursday",
-		"friday",
-		"saturday",
-		"sunday",
-	];
 
 	const toggleComplete = (id: number, isComplete: boolean) => {
 		const updatedWeeklyTasks = weeklyTasks.map((weeklyTask) => {
@@ -72,6 +60,18 @@ const WeeklyChecklist = () => {
 		setWeeklyTasks(fetchedTasks);
 	};
 
+	// used for generating a todo list for each day of the week
+	const daysOfWeek: TaskWithDay["day"][] = [
+		"monday",
+		"tuesday",
+		"wednesday",
+		"thursday",
+		"friday",
+		"saturday",
+		"sunday",
+	];
+
+	// generates the weekly todo list
 	const TodoList = ({ todolists }: { todolists: TaskWithDay[] }) => {
 		return (
 			<div className="flex flex-col md:flex-row justify-between space-y-2 md:space-x-2 md:space-y-0 items-stretch">
@@ -79,7 +79,8 @@ const WeeklyChecklist = () => {
 					<div key={day} className="flex-1 flex flex-col">
 						<div className="flex items-center justify-between">
 							<div className="text-lg font-bold">{day}</div>
-							{day === "sunday" && (
+							{day ===
+								"sunday" /* renders the set button on sunday because it is the right most day */ && (
 								<Button
 									className=" px-6 h-6 w-6"
 									variant="destructive"
@@ -131,6 +132,7 @@ const WeeklyChecklist = () => {
 										</label>
 									</li>
 								))}
+							{/* The WeeklySubmit component handles the form submission, updating the state, and adding the task to the database */}
 							<WeeklySubmit addTask={addTask} day={day} />
 						</ul>
 					</div>
