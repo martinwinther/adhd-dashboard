@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "../../components/ui/button";
-import WeeklySubmit from "../../components/ui/WeeklySubmit";
+import WeeklySubmit from "../../components/forms/WeeklySubmit";
 import {
 	fetchWeeklyTasks,
 	updateWeeklyTasks,
