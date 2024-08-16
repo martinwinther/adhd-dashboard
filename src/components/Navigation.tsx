@@ -2,6 +2,7 @@
 
 import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
 import React, { useState } from "react";
+import { SignOut } from "./signout-button";
 
 const Navigation = () => {
 	const [authenticationStatus, setAuthenticationStatus] = useState(false);
@@ -17,6 +18,7 @@ const Navigation = () => {
 	return (
 		<nav className="flex justify-between items-center px-2 w-full h-12 bg-gray-900 text-white">
 			<h1 className="">ADHD - Dashboard</h1>
+			<SignOut />
 			{/* 
 						changes what is rendered based on the authentication status
 					*/}
