@@ -14,14 +14,16 @@ const DailyChecklistSubmitForm = ({
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault(); // Prevent the default form submission behavior
-		const id = Date.now();
+		const id = Date.now(); // sets the id to the current timestamp
 		if (todoValue.trim()) {
-			createDailyTasks(id, todoValue);
-			addTask(id, todoValue);
-			setTodoValue(""); // Clear the input after submitting
+			// checks if the input is not empty
+			createDailyTasks(id, todoValue); // creates a new task in the database
+			addTask(id, todoValue); // adds the task to the state
+			setTodoValue(""); // clears the input after submitting
 		}
 	};
 
+	// clears the input after it is no longer selected
 	const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
 		if (event.currentTarget === event.target) {
 			setTimeout(() => {
@@ -44,6 +46,8 @@ const DailyChecklistSubmitForm = ({
 				/>
 			</label>
 			<div className="flex justify-center pt-1">
+				{" "}
+				{/* Only renders the Add Task button if the input is not empty */}
 				{todoValue ? (
 					<Button type="submit" variant="secondary">
 						Add Task

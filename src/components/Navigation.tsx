@@ -1,33 +1,25 @@
 "use client";
 
 import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
-//imports
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-//component declaration
 const Navigation = () => {
 	const [authenticationStatus, setAuthenticationStatus] = useState(false);
-	/*
-    //login
-	    //if logged out
-	        //icon 1
-	        //"login"
-	    //if logged in
-	        //icon 2
-	        //"logout"
-    */
+
+	// toggles the authentication status
 	const toggleAuthentication = () => {
 		setAuthenticationStatus(!authenticationStatus);
 		console.log(authenticationStatus);
 	};
-	const name = "Martin";
-	//settings
-	//triple dots or widget
-	//user description
+
+	const name = "Martin"; // placeholder for user name
+
 	return (
 		<nav className="flex justify-between items-center px-2 w-full h-12 bg-gray-900 text-white">
 			<h1 className="">ADHD - Dashboard</h1>
-
+			{/* 
+						changes what is rendered based on the authentication status
+					*/}
 			<button onClick={toggleAuthentication}>
 				{authenticationStatus ? (
 					<div className="flex items-center">

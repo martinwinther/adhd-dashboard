@@ -14,10 +14,10 @@ const DailyChecklist = () => {
 	const [dailyTasks, setDailyTasks] = useState<Task[]>([]);
 	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<Task[]>([]);
 
+	// when the component loads, the daily tasks are fetched from the database and stored in the state
 	useEffect(() => {
 		const loadTasks = async () => {
 			const fetchedTasks = await fetchDailyTasks();
-			// Make a fetch for previous days completed tasks
 			setDailyTasks(fetchedTasks);
 			setDailyTasksYesterday(fetchedTasks);
 			console.log("Fetched daily tasks:", fetchedTasks);
@@ -25,6 +25,8 @@ const DailyChecklist = () => {
 		loadTasks();
 	}, []);
 
+	//
+	// takes in the id and isComplete value and updates the isComplete value TODO: Make Async and add error handling
 	const toggleComplete = (id: number, isComplete: boolean) => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
 			if (dailyTask.id === id) {
@@ -33,10 +35,11 @@ const DailyChecklist = () => {
 
 			return dailyTask;
 		});
-		updateDailyTasks(id, isComplete);
-		setDailyTasks(updatedDailyTasks);
+		updateDailyTasks(id, isComplete); // sets the isComplete value in the database
+		setDailyTasks(updatedDailyTasks); // updates the state with the new isComplete value TODO: Maybe setDailyTasks from the database directly?
 	};
 
+	// resets the daily tasks and updates the previous day tasks
 	const handleReset = async () => {
 		// Create a new array that includes updates for isCompleteYesterday before resetting isComplete
 		const updatedTasks = dailyTasks.map((task) => ({
@@ -47,7 +50,7 @@ const DailyChecklist = () => {
 
 		try {
 			// Pass the updated tasks array to reset in the database
-			await resetDailyTasks(updatedTasks); // Make sure this function uses the updated isCompleteYesterday correctly
+			await resetDailyTasks(updatedTasks);
 
 			// Update state with the newly updated tasks
 			setDailyTasks(
@@ -64,11 +67,7 @@ const DailyChecklist = () => {
 		}
 	};
 
-	/* 	const handleTest = () => {
-		console.log(dailyTasksYesterday[0].isCompleteYesterday);
-		console.log(dailyTasks);
-	}; */
-
+	// deletes the completed tasks from the database and updates the state TODO: Make Async and add error handling
 	const handleDelete = () => {
 		const tasksToDelete = dailyTasks.filter(
 			(dailyTask) => dailyTask.isComplete,
@@ -80,6 +79,7 @@ const DailyChecklist = () => {
 		setDailyTasks([...dailyTasks.filter((task) => !task.isComplete)]);
 	};
 
+	// tells the DailySubmit component to add a new task to the database and updates the state with the new task
 	const addTask = (id: number, taskDescription: string) => {
 		const newTask = {
 			id: id,
@@ -89,15 +89,17 @@ const DailyChecklist = () => {
 		setDailyTasks([...dailyTasks, newTask]); //  Add to db
 	};
 
-	type TaskListProps = {
+	// the TaskList component handles the display of the tasks
+	const TaskList = ({
+		tasklist,
+		tasklistYesterday,
+	}: {
 		tasklist: Task[];
 		tasklistYesterday: Task[];
-	};
-
-	const TaskList = ({ tasklist, tasklistYesterday }: TaskListProps) => {
+	}) => {
 		return (
 			<div className="flex">
-				{/* Left side list */}
+				{/* Todays tasks */}
 				<div className="border-2 rounded-lg p-2 ">
 					<div className="">
 						<ul>
@@ -122,6 +124,7 @@ const DailyChecklist = () => {
 								</li>
 							))}
 						</ul>
+						{/* The DailySubmit component handles the form submission, updating the state, and adding the task to the database */}
 						<DailySubmit addTask={addTask} />
 						<div className="flex justify-center pt-1">
 							<Button variant="destructive" onClick={() => handleReset()}>
@@ -130,14 +133,11 @@ const DailyChecklist = () => {
 							<Button variant="destructive" onClick={() => handleDelete()}>
 								Delete
 							</Button>
-							{/* 					<Button variant="destructive" onClick={() => handleTest()}>
-								Test
-							</Button> */}
 						</div>
 					</div>
 				</div>
 
-				{/* Right side list */}
+				{/* Yesterdays tasks */}
 				{dailyTasksYesterday.length > 0 ? (
 					<div className="border-2 rounded-lg ms-2 p-2">
 						<ul>
