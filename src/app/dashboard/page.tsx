@@ -1,3 +1,4 @@
+"use client";
 import Navigation from "@/components/Navigation";
 import Kanban from "@/app/dashboard/components/Kanban";
 import WeeklyChecklist from "@/app/dashboard/components/WeeklyChecklist";
@@ -6,13 +7,25 @@ import Footer from "@/components/Footer";
 import TodaysList from "@/app/dashboard/components/TodaysList";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import Link from "next/link";
 
 export default function Home(session: Session) {
 	return (
-		<main className="flex flex-col h-screen">
-			<Link href="/dashboard/">Go To Dashboard</Link>
-			<Link href="/login">Login</Link>
-		</main>
+		<SessionProvider session={session}>
+			<main className="flex flex-col justify-between h-screen">
+				<Navigation />
+				<div className="flex flex-col items-center flex-1">
+					<div className="flex flex-row justify-between items-center w-10/12 mt-4">
+						<Kanban />
+						<TodaysList />
+						<DailyCheckList />
+					</div>
+
+					<div className="w-10/12 py-4 flex-grow">
+						<WeeklyChecklist />
+					</div>
+				</div>
+				<Footer />
+			</main>
+		</SessionProvider>
 	);
 }
