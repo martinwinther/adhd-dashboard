@@ -1,36 +1,45 @@
 "use client";
 
 import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
-import React, { useState } from "react";
-import { SignOut } from "./signout-button";
+import React, { useEffect, useState } from "react";
+import { SignOutButton } from "./signout-button";
+import { SignInButton } from "./signin-button";
+import { useSession } from "next-auth/react";
 
 const Navigation = () => {
-	const [authenticationStatus, setAuthenticationStatus] = useState(false);
-
 	// toggles the authentication status
-	const toggleAuthentication = () => {
-		setAuthenticationStatus(!authenticationStatus);
-		console.log(authenticationStatus);
-	};
+
+	const [authenticationStatus, setAuthenticationStatus] = useState(false);
+	const session = useSession();
+
+	useEffect(() => {
+		if (session.status === "authenticated") {
+			setAuthenticationStatus(true);
+		} else {
+			setAuthenticationStatus(false);
+		}
+	}, [session.status]);
 
 	const name = "Martin"; // placeholder for user name
+
+	const checkStatus = () => {
+		console.log(authenticationStatus);
+	};
 
 	return (
 		<nav className="flex justify-between items-center px-2 w-full h-12 bg-gray-900 text-white">
 			<h1 className="">ADHD - Dashboard</h1>
-			<SignOut />
+
+			<button onClick={checkStatus}>Status</button>
+			{authenticationStatus ? <SignOutButton /> : <SignInButton />}
+
 			{/* 
 						changes what is rendered based on the authentication status
 					*/}
-			<button onClick={toggleAuthentication}>
-				{authenticationStatus ? (
-					<div className="flex items-center">
-						User: {name} <PowerIcon className="ms-2 w-6 h-6 text-white" />
-					</div>
-				) : (
-					<UserPlusIcon className="size-6 text-white" />
-				)}
-			</button>
+
+			<div className="flex items-center">
+				User: {name} <PowerIcon className="ms-2 w-6 h-6 text-white" />
+			</div>
 		</nav>
 	);
 };
