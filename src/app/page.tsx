@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import TodaysList from "@/app/dashboard/TodaysList";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { useState } from "react";
 
 export default function Home(session: Session) {
 	return (
