@@ -8,7 +8,7 @@ import TodaysList from "@/app/dashboard/TodaysList";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 
-export default function Home(session: Session | null) {
+export default function Home(session) {
 	return (
 		<SessionProvider session={session}>
 			<main className="flex flex-col justify-between h-screen">
