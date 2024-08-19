@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 

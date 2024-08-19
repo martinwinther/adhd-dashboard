@@ -1,4 +1,3 @@
-"use client";
 import Navigation from "@/components/Navigation";
 import Kanban from "@/app/dashboard/components/Kanban";
 import WeeklyChecklist from "@/app/dashboard/components/WeeklyChecklist";
