@@ -24,6 +24,7 @@ const Navigation = () => {
 
 	const checkStatus = () => {
 		console.log(authenticationStatus);
+		console.log(session.data);
 	};
 
 	return (
