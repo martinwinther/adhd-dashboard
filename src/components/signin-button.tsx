@@ -1,6 +1,16 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { handleSignIn } from "@/actions/signInAction";
+import { useRouter } from "next/navigation";
 
 export function SignInButton() {
-	return <button onClick={() => signIn()}>Sign in</button>;
+	const router = useRouter();
+	return (
+		<form
+			action={async (event) => {
+				await handleSignIn(); // Perform sign-out action
+			}}
+		>
+			<button type="submit">Sign In</button>
+		</form>
+	);
 }

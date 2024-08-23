@@ -2,8 +2,9 @@
 
 import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
 import React, { useEffect, useState } from "react";
-import { SignOutButton } from "./signout-button";
+
 import { SignInButton } from "./signin-button";
+import { SignOutButton } from "./signout-button";
 import { useSession } from "next-auth/react";
 
 const Navigation = () => {
