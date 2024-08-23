@@ -1,5 +1,4 @@
-// for auth.js
-
+// src/auth.ts (or wherever your auth middleware is defined)
 import { Pool } from "@neondatabase/serverless";
 import NextAuth from "next-auth";
 import PostgresAdapter from "@auth/pg-adapter";
