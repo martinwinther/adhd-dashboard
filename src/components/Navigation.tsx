@@ -3,29 +3,15 @@
 import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
 import React, { useEffect, useState } from "react";
 
-import { SignInButton } from "./signin-button";
-import { SignOutButton } from "./signout-button";
-import { useSession } from "next-auth/react";
-
 const Navigation = () => {
 	// toggles the authentication status
 
 	const [authenticationStatus, setAuthenticationStatus] = useState(false);
-	const session = useSession();
-
-	useEffect(() => {
-		if (session.status === "authenticated") {
-			setAuthenticationStatus(true);
-		} else {
-			setAuthenticationStatus(false);
-		}
-	}, [session.status]);
 
 	const name = "Martin"; // placeholder for user name
 
 	const checkStatus = () => {
 		console.log(authenticationStatus);
-		console.log(session.data);
 	};
 
 	return (
@@ -33,7 +19,7 @@ const Navigation = () => {
 			<h1 className="">ADHD - Dashboard</h1>
 
 			<button onClick={checkStatus}>Status</button>
-			{authenticationStatus ? <SignOutButton /> : <SignInButton />}
+			{authenticationStatus ? <span>Sign Out</span> : <span>Sign In</span>}
 
 			{/* 
 						changes what is rendered based on the authentication status
