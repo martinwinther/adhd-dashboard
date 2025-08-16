@@ -1,46 +1,235 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import DailySubmit from "../../../components/forms/DailySubmit";
+import { Input } from "@/components/ui/input";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { DroppableZone } from "@/components/ui/droppable-zone";
+import { Card } from "@/components/ui/card";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import {
 	deleteDailyTasks,
 	fetchDailyTasks,
 	resetDailyTasks,
 	updateDailyTasks,
+	createDailyTasks,
 } from "@/lib/data";
 import { Task } from "@/lib/types";
 
-const DailyChecklist = () => {
-	const [dailyTasks, setDailyTasks] = useState<Task[]>([]);
-	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<Task[]>([]);
+interface DailyTask {
+	id: number;
+	task: string;
+	isComplete: boolean;
+	isCompleteYesterday?: boolean;
+	isTemporary?: boolean; // Flag to indicate if this is a dragged task not yet saved to DB
+}
 
-	// when the component loads, the daily tasks are fetched from the database and stored in the state
+// Move TaskItem outside the main component to prevent recreation on every render
+const TaskItem = React.memo(({ 
+	task, 
+	onToggleComplete, 
+	onDelete 
+}: { 
+	task: DailyTask; 
+	onToggleComplete: (id: number, isComplete: boolean) => void;
+	onDelete: (id: number) => void;
+}) => {
+	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+		id: `task-daily-${task.id}`,
+		data: {
+			id: task.id,
+			type: "task",
+			sourceComponent: "daily",
+			sourceData: task,
+		},
+	});
+
+	const style = {
+		transform: CSS.Translate.toString(transform),
+		opacity: isDragging ? 0.5 : 1,
+	};
+
+	return (
+		<div
+			ref={setNodeRef}
+			style={style}
+			className={`flex items-center justify-between p-2 border rounded mb-1 ${
+				task.isTemporary 
+					? "bg-blue-50 border-blue-200" 
+					: "bg-white border-gray-200"
+			} ${isDragging ? "z-50" : ""}`}
+		>
+			{/* Non-draggable checkbox area */}
+			<div 
+				onMouseDown={(e) => e.stopPropagation()} // Prevent drag from starting
+				className="flex items-center space-x-2"
+			>
+				<input
+					type="checkbox"
+					checked={task.isComplete}
+					onChange={(e) => {
+						e.stopPropagation(); // Prevent double-triggering
+						onToggleComplete(task.id, task.isComplete);
+					}}
+					className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+				/>
+			</div>
+			
+			{/* Draggable handle area */}
+			<div 
+				{...listeners}
+				{...attributes}
+				className="cursor-grab flex items-center space-x-2 flex-1"
+			>
+				<span
+					className={`${
+						task.isComplete ? "line-through text-gray-500" : "text-gray-900"
+					}`}
+					style={{
+						textDecoration: task.isComplete ? 'line-through' : 'none'
+					}}
+				>
+					{task.task}
+				</span>
+				{task.isTemporary && (
+					<span className="text-xs text-blue-600 bg-blue-100 px-1 rounded">
+						temp
+					</span>
+				)}
+			</div>
+			
+			{/* Non-draggable trash can area */}
+			<div 
+				onMouseDown={(e) => e.stopPropagation()} // Prevent drag from starting
+				onClick={(e) => {
+					e.stopPropagation(); // Prevent triggering the task toggle
+					e.preventDefault(); // Prevent any default behavior
+					onDelete(task.id);
+				}}
+			>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+				>
+					<TrashIcon className="h-4 w-4" />
+				</Button>
+			</div>
+		</div>
+	);
+});
+
+TaskItem.displayName = "TaskItem";
+
+const DailyChecklist = () => {
+	const [dailyTasks, setDailyTasks] = useState<DailyTask[]>([]);
+	const [dailyTasksYesterday, setDailyTasksYesterday] = useState<DailyTask[]>([]);
+	const [newTaskTitle, setNewTaskTitle] = useState("");
+
+	// Load tasks from database on component mount
 	useEffect(() => {
 		const loadTasks = async () => {
-			const fetchedTasks = await fetchDailyTasks();
-			setDailyTasks(fetchedTasks);
-			setDailyTasksYesterday(fetchedTasks);
-			console.log("Fetched daily tasks:", fetchedTasks);
+			try {
+				const fetchedTasks = await fetchDailyTasks();
+				setDailyTasks(fetchedTasks);
+				setDailyTasksYesterday(fetchedTasks);
+				console.log("Fetched daily tasks:", fetchedTasks);
+			} catch (error) {
+				console.error("Error loading daily tasks:", error);
+			}
 		};
 		loadTasks();
 	}, []);
 
-	//
-	// takes in the id and isComplete value and updates the isComplete value TODO: Make Async and add error handling
-	const toggleComplete = (id: number, isComplete: boolean) => {
+	// Listen for task drops from other components
+	useEffect(() => {
+		const handleTaskMoved = async (event: CustomEvent) => {
+			const { taskId, fromComponent, toComponent, toData } = event.detail;
+			if (toComponent === "daily") {
+				// Only add the task if it's coming from a different component
+				if (fromComponent !== "daily") {
+					const newTask: DailyTask = {
+						id: Date.now(),
+						task: toData.title || toData.task || "Imported Task",
+						isComplete: false,
+						isTemporary: false, // Mark as permanent (save to database)
+					};
+					
+					try {
+						// Save to database
+						await createDailyTasks(newTask.id, newTask.task);
+						// Update local state
+						setDailyTasks(prev => [...prev, newTask]);
+					} catch (error) {
+						console.error("Error creating daily task from drag:", error);
+					}
+				}
+			} else if (fromComponent === "daily") {
+				// Remove the task from daily if it's being moved to another component
+				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+				
+				try {
+					// Delete from database
+					await deleteDailyTasks([numericTaskId]);
+					// Update local state
+					setDailyTasks(prev => prev.filter(task => {
+						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+						return taskIdNum !== numericTaskId;
+					}));
+				} catch (error) {
+					console.error("Error deleting daily task when moved out:", error);
+				}
+			}
+		};
+
+		window.addEventListener("task-moved", handleTaskMoved as unknown as EventListener);
+		return () => {
+			window.removeEventListener("task-moved", handleTaskMoved as unknown as EventListener);
+		};
+	}, []);
+
+	const addTask = useCallback(async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (newTaskTitle.trim()) {
+			const newTask: DailyTask = {
+				id: Date.now(),
+				task: newTaskTitle.trim(),
+				isComplete: false,
+				isTemporary: false, // Mark as permanent (saved to database)
+			};
+			setDailyTasks(prev => [...prev, newTask]);
+			// Add to database
+			await createDailyTasks(newTask.id, newTask.task);
+			setNewTaskTitle("");
+		}
+	}, [newTaskTitle]);
+
+	const toggleComplete = useCallback(async (id: number, isComplete: boolean) => {
 		const updatedDailyTasks = dailyTasks.map((dailyTask) => {
 			if (dailyTask.id === id) {
 				return { ...dailyTask, isComplete: !dailyTask.isComplete };
 			}
-
 			return dailyTask;
 		});
-		updateDailyTasks(id, isComplete); // sets the isComplete value in the database
-		setDailyTasks(updatedDailyTasks); // updates the state with the new isComplete value TODO: Maybe setDailyTasks from the database directly?
-	};
+		
+		try {
+			await updateDailyTasks(id, isComplete);
+			setDailyTasks(updatedDailyTasks);
+		} catch (error) {
+			console.error("Error updating task:", error);
+		}
+	}, [dailyTasks]);
 
-	// resets the daily tasks and updates the previous day tasks
-	const handleReset = async () => {
+	const deleteTask = useCallback(async (id: number) => {
+		try {
+			await deleteDailyTasks([id]);
+			setDailyTasks(prev => prev.filter(task => task.id !== id));
+		} catch (error) {
+			console.error("Error deleting task:", error);
+		}
+	}, []);
+
+	const handleReset = useCallback(async () => {
 		// Create a new array that includes updates for isCompleteYesterday before resetting isComplete
 		const updatedTasks = dailyTasks.map((task) => ({
 			...task,
@@ -56,7 +245,7 @@ const DailyChecklist = () => {
 			setDailyTasks(
 				updatedTasks.map((task) => ({
 					...task,
-					isComplete: false, // Ensure isComplete is false for all, even though it should already be set
+					isComplete: false, // Ensure isComplete is false for all
 				})),
 			);
 
@@ -65,110 +254,108 @@ const DailyChecklist = () => {
 		} catch (error) {
 			console.error("Error resetting tasks:", error);
 		}
-	};
+	}, [dailyTasks]);
 
-	// deletes the completed tasks from the database and updates the state TODO: Make Async and add error handling
-	const handleDelete = () => {
-		const tasksToDelete = dailyTasks.filter(
-			(dailyTask) => dailyTask.isComplete,
-		);
-		const deleteIds = tasksToDelete.map((task) => {
-			return task.id;
-		});
-		deleteDailyTasks(deleteIds);
-		setDailyTasks([...dailyTasks.filter((task) => !task.isComplete)]);
-	};
+	const handleDeleteCompleted = useCallback(async () => {
+		const tasksToDelete = dailyTasks.filter((dailyTask) => dailyTask.isComplete);
+		const deleteIds = tasksToDelete.map((task) => task.id);
+		
+		try {
+			await deleteDailyTasks(deleteIds);
+			setDailyTasks(prev => prev.filter((task) => !task.isComplete));
+		} catch (error) {
+			console.error("Error deleting completed tasks:", error);
+		}
+	}, [dailyTasks]);
 
-	// tells the DailySubmit component to add a new task to the database and updates the state with the new task
-	const addTask = (id: number, taskDescription: string) => {
-		const newTask = {
-			id: id,
-			task: taskDescription,
-			isComplete: false,
-		};
-		setDailyTasks([...dailyTasks, newTask]); //  Add to db
-	};
+	return (
+		<Card 
+			title="Daily Checklist"
+			className="h-full"
+		>
+			<DroppableZone
+				id="main"
+				component="daily"
+				accepts={["kanban", "todays", "weekly"]}
+				className="h-full flex flex-col"
+			>
+				<div className="mb-4">
+				<form onSubmit={addTask} className="space-y-2">
+					<Input
+						placeholder="Add daily task..."
+						value={newTaskTitle}
+						onChange={(e) => setNewTaskTitle(e.target.value)}
+						className="text-sm"
+					/>
+					<Button
+						type="submit"
+						variant="secondary"
+						size="sm"
+						disabled={!newTaskTitle.trim()}
+						className="w-full"
+					>
+						Add Task
+					</Button>
+				</form>
+			</div>
 
-	// the TaskList component handles the display of the tasks
-	const TaskList = ({
-		tasklist,
-		tasklistYesterday,
-	}: {
-		tasklist: Task[];
-		tasklistYesterday: Task[];
-	}) => {
-		return (
-			<div className="flex">
-				{/* Todays tasks */}
-				<div className="border-2 rounded-lg p-2 ">
-					<div className="">
-						<ul>
-							{tasklist.map((dailyTask) => (
-								<li key={dailyTask.id}>
-									<label className="cursor-pointer">
-										<input
-											type="checkbox"
-											checked={dailyTask.isComplete}
-											onChange={() =>
-												toggleComplete(dailyTask.id, dailyTask.isComplete)
-											}
-										/>
-										<span
-											className={
-												dailyTask.isComplete ? "line-through ps-1" : " ps-1"
-											}
-										>
-											{dailyTask.task}
-										</span>
-									</label>
-								</li>
-							))}
-						</ul>
-						{/* The DailySubmit component handles the form submission, updating the state, and adding the task to the database */}
-						<DailySubmit addTask={addTask} />
-						<div className="flex justify-center pt-1">
-							<Button variant="destructive" onClick={() => handleReset()}>
-								Reset
-							</Button>
-							<Button variant="destructive" onClick={() => handleDelete()}>
-								Delete
-							</Button>
-						</div>
+			<div className="flex gap-4">
+				{/* Today's tasks */}
+				<div className="flex-1">
+					<h3 className="font-semibold text-gray-800 mb-2">Today</h3>
+					<div className="space-y-1 mb-4">
+						{dailyTasks.map((task) => (
+							<TaskItem
+								key={task.id}
+								task={task}
+								onToggleComplete={toggleComplete}
+								onDelete={deleteTask}
+							/>
+						))}
+					</div>
+					<div className="flex gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={handleReset}
+							className="text-xs"
+						>
+							Reset
+						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={handleDeleteCompleted}
+							className="text-xs"
+						>
+							Delete Completed
+						</Button>
 					</div>
 				</div>
 
-				{/* Yesterdays tasks */}
-				{dailyTasksYesterday.length > 0 ? (
-					<div className="border-2 rounded-lg ms-2 p-2">
-						<ul>
-							{tasklistYesterday.map((dailyTasksYesterday) => (
-								<li key={dailyTasksYesterday.id}>
-									<label className="cursor-pointer">
-										<span
-											className={
-												dailyTasksYesterday.isCompleteYesterday
-													? "line-through ps-1"
-													: "text-red-400 ps-1"
-											}
-										>
-											{dailyTasksYesterday.task}
-										</span>
-									</label>
-								</li>
+				{/* Yesterday's tasks */}
+				{dailyTasksYesterday.length > 0 && (
+					<div className="flex-1">
+						<h3 className="font-semibold text-gray-800 mb-2">Yesterday</h3>
+						<div className="space-y-1">
+							{dailyTasksYesterday.map((task) => (
+								<div
+									key={task.id}
+									className={`p-2 border border-gray-200 rounded mb-1 ${
+										task.isCompleteYesterday
+											? "bg-gray-50 line-through text-gray-500"
+											: "bg-red-50 text-red-600"
+									}`}
+								>
+									{task.task}
+								</div>
 							))}
-						</ul>
+						</div>
 					</div>
-				) : (
-					""
 				)}
 			</div>
-		);
-	};
-
-	return (
-		<div className="">
-			<TaskList tasklist={dailyTasks} tasklistYesterday={dailyTasksYesterday} />
-		</div>
+			</DroppableZone>
+		</Card>
 	);
 };
 
