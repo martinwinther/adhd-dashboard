@@ -1,7 +1,7 @@
 "use client";
 
-import { PowerIcon, UserPlusIcon } from "@heroicons/react/16/solid";
-import React, { useEffect, useState } from "react";
+import { PowerIcon } from "@heroicons/react/16/solid";
+import React, { useState } from "react";
 
 const Navigation = () => {
 	// toggles the authentication status
@@ -11,7 +11,7 @@ const Navigation = () => {
 	const name = "Martin"; // placeholder for user name
 
 	const checkStatus = () => {
-		console.log(authenticationStatus);
+		// TODO: Implement authentication status check
 	};
 
 	return (

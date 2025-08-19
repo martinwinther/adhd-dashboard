@@ -34,10 +34,8 @@ export async function updateDailyTasks(id: number, isComplete: boolean) {
 	try {
 		if (!isComplete) {
 			await sql<Task>`UPDATE adhd_dailychecklist SET "isComplete" = true WHERE "id" = ${id};`;
-			console.log("set to true");
 		} else {
 			await sql<Task>`UPDATE adhd_dailychecklist SET "isComplete" = false WHERE "id" = ${id};`;
-			console.log("set to false");
 		}
 	} catch (error) {
 		console.error("Database Error:", error);
@@ -98,10 +96,8 @@ export async function updateWeeklyTasks(id: number, isComplete: boolean) {
 	try {
 		if (!isComplete) {
 			await sql<Task>`UPDATE adhd_weeklychecklist SET "isComplete" = true WHERE "id" = ${id};`;
-			console.log("set to true");
 		} else {
 			await sql<Task>`UPDATE adhd_weeklychecklist SET "isComplete" = false WHERE "id" = ${id};`;
-			console.log("set to false");
 		}
 	} catch (error) {
 		console.error("Database Error:", error);
@@ -113,7 +109,6 @@ export async function updateWeeklyTaskDay(id: number, day: Day) {
 	noStore();
 	try {
 		await sql<Task>`UPDATE adhd_weeklychecklist SET "day" = ${day} WHERE "id" = ${id};`;
-		console.log(`Updated task ${id} to day ${day}`);
 	} catch (error) {
 		console.error("Database Error:", error);
 		throw new Error("Failed to update weekly task day." + error);

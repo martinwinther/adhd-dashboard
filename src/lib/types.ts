@@ -20,32 +20,7 @@ export type Day =
 	| "saturday"
 	| "sunday";
 
-// New types for drag and drop functionality
-export interface UnifiedTask {
-	id: number;
-	title: string;
-	description?: string;
-	isComplete: boolean;
-	priority: boolean;
-	component: "kanban" | "todays" | "daily" | "weekly";
-	status?: "todo" | "in-progress" | "done";
-	day?: Day;
-	createdAt: Date;
-	isCompleteYesterday?: boolean;
-}
 
-export interface DragItem {
-	id: number;
-	type: "task";
-	sourceComponent: string;
-	sourceData: any;
-}
-
-export interface DropZone {
-	id: string;
-	component: "kanban" | "todays" | "daily" | "weekly";
-	accepts: string[];
-}
 
 export interface KanbanTask {
 	id: number;
