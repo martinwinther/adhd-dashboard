@@ -43,7 +43,7 @@ const ThemeSwitcher = () => {
               className={`
                 relative p-3 rounded-lg border transition-all duration-200
                 ${isActive 
-                  ? 'bg-primary text-white border-primary shadow-md' 
+                  ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
                   : 'bg-surface text-primary border-accent hover:bg-accent/10'
                 }
               `}

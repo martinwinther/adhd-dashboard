@@ -155,7 +155,7 @@ const DayColumn = React.memo(({
 			id={day}
 			component="weekly"
 			accepts={["kanban", "todays", "daily"]}
-			className="flex flex-col bg-accent/5 border border-accent/30 rounded-lg p-3 sm:p-4 min-h-0"
+			className="flex flex-col bg-accent/5 border border-accent/30 p-3 sm:p-4 min-h-0"
 		>
 			<div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
 				<h3 className="text-xs sm:text-sm font-bold capitalize truncate text-primary">{day}</h3>

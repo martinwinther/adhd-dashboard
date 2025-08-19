@@ -520,28 +520,57 @@
   background-color: #e8dfd0 !important;
 }
 
-/* Weekly Checklist Day Column Borders */
-.theme-light .weekly-checklist-grid > div:not(:last-child) {
-  border-right: 2px solid #94a3b8 !important;
+/* Weekly Checklist Day Column Borders - Clean and simple */
+.theme-light .grid,
+.theme-dark .grid,
+.theme-monastic .grid {
+  position: relative !important;
 }
 
-.theme-dark .weekly-checklist-grid > div:not(:last-child) {
-  border-right: 2px solid #475569 !important;
+.theme-light .grid > div,
+.theme-dark .grid > div,
+.theme-monastic .grid > div {
+  position: relative !important;
 }
 
-.theme-monastic .weekly-checklist-grid > div:not(:last-child) {
-  border-right: 2px solid #a08b6b !important;
+/* Add borders to all columns except the last one */
+.theme-light .grid > div:not(:last-child)::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: -1.5px !important;
+  width: 1px !important;
+  height: 100% !important;
+  background-color: #334155 !important;
+  z-index: 100 !important;
 }
 
-/* Alternative selectors in case the grid class name is different */
-.theme-light [class*="grid"] > div:not(:last-child) {
-  border-right: 2px solid #94a3b8 !important;
+.theme-dark .grid > div:not(:last-child)::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: -1.5px !important;
+  width: 1px !important;
+  height: 100% !important;
+  background-color: #e2e8f0 !important;
+  z-index: 100 !important;
 }
 
-.theme-dark [class*="grid"] > div:not(:last-child) {
-  border-right: 2px solid #475569 !important;
+.theme-monastic .grid > div:not(:last-child)::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  right: -1.5px !important;
+  width: 1px !important;
+  height: 100% !important;
+  background-color: #3d2e1a !important;
+  z-index: 100 !important;
 }
 
-.theme-monastic [class*="grid"] > div:not(:last-child) {
-  border-right: 2px solid #a08b6b !important;
+/* Override droppable zone styling for weekly checklist */
+.theme-light .grid > div > div[class*="DroppableZone"],
+.theme-dark .grid > div > div[class*="DroppableZone"],
+.theme-monastic .grid > div > div[class*="DroppableZone"] {
+  border-right: none !important;
+  border-radius: 0 !important;
 }
