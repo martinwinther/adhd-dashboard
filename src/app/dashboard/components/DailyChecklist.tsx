@@ -53,16 +53,16 @@ const TaskItem = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`flex items-center justify-between p-2 border rounded mb-1 ${
+			className={`flex items-center justify-between p-3 border rounded-lg transition-all duration-200 mb-2 ${
 				task.isTemporary 
-					? "bg-accent/20 border-accent" 
-					: "bg-surface border-accent"
+					? "bg-accent/20 border-accent shadow-sm" 
+					: "bg-surface border-accent shadow-sm hover:shadow-md"
 			} ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
 			<div 
 				onMouseDown={(e) => e.stopPropagation()} // Prevent drag from starting
-				className="flex items-center space-x-2"
+				className="flex items-center space-x-3"
 			>
 				<input
 					type="checkbox"
@@ -71,7 +71,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation(); // Prevent double-triggering
 						onToggleComplete(task.id, task.isComplete);
 					}}
-					className="rounded border-accent text-primary focus:ring-primary"
+					className="rounded border-accent text-primary focus:ring-primary h-4 w-4"
 				/>
 			</div>
 			
@@ -79,10 +79,10 @@ const TaskItem = React.memo(({
 			<div 
 				{...listeners}
 				{...attributes}
-				className="cursor-grab flex items-center space-x-2 flex-1"
+				className="cursor-grab flex items-center space-x-3 flex-1"
 			>
 				<span
-					className={`${
+					className={`text-sm font-medium ${
 						task.isComplete ? "line-through text-muted" : "text-primary"
 					}`}
 					style={{
@@ -92,7 +92,7 @@ const TaskItem = React.memo(({
 					{task.task}
 				</span>
 				{task.isTemporary && (
-					<span className="text-xs text-accent bg-accent/20 px-1 rounded">
+					<span className="text-xs text-accent bg-accent/20 px-2 py-1 rounded-full font-medium">
 						temp
 					</span>
 				)}
@@ -110,7 +110,7 @@ const TaskItem = React.memo(({
 				<Button
 					variant="ghost"
 					size="sm"
-					className="h-6 w-6 p-0 text-muted hover:text-red-500"
+					className="h-7 w-7 p-0 text-muted hover:text-red-500 transition-colors"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -279,8 +279,8 @@ const DailyChecklist = () => {
 				accepts={["kanban", "todays", "weekly"]}
 				className="h-full flex flex-col"
 			>
-				<div className="mb-4 flex-shrink-0">
-				<form onSubmit={addTask} className="space-y-2">
+				<div className="mb-6 flex-shrink-0">
+				<form onSubmit={addTask} className="space-y-3">
 					<Input
 						placeholder="Add daily task..."
 						value={newTaskTitle}
@@ -292,18 +292,18 @@ const DailyChecklist = () => {
 						variant="secondary"
 						size="sm"
 						disabled={!newTaskTitle.trim()}
-						className="w-full"
+						className="w-full font-medium"
 					>
 						Add Task
 					</Button>
 				</form>
 			</div>
 
-			<div className="flex gap-4 flex-1 min-h-0">
+			<div className="flex gap-6 flex-1 min-h-0">
 				{/* Today's tasks */}
 				<div className="flex-1 flex flex-col min-h-0">
-					<h3 className="font-semibold text-primary mb-2 flex-shrink-0">Today</h3>
-					<div className="space-y-1 mb-4 flex-1 min-h-0 overflow-y-auto">
+					<h3 className="font-semibold text-primary mb-3 flex-shrink-0 text-sm uppercase tracking-wide">Today</h3>
+					<div className="space-y-2 mb-4 flex-1 min-h-0 overflow-y-auto">
 						{dailyTasks.map((task) => (
 							<TaskItem
 								key={task.id}
@@ -318,7 +318,7 @@ const DailyChecklist = () => {
 							variant="outline"
 							size="sm"
 							onClick={handleReset}
-							className="text-xs"
+							className="text-xs font-medium"
 						>
 							Reset
 						</Button>
@@ -326,7 +326,7 @@ const DailyChecklist = () => {
 							variant="outline"
 							size="sm"
 							onClick={handleDeleteCompleted}
-							className="text-xs"
+							className="text-xs font-medium"
 						>
 							Delete Completed
 						</Button>
@@ -336,12 +336,12 @@ const DailyChecklist = () => {
 				{/* Yesterday's tasks */}
 				{dailyTasksYesterday.length > 0 && (
 					<div className="flex-1 flex flex-col min-h-0">
-						<h3 className="font-semibold text-primary mb-2 flex-shrink-0">Yesterday</h3>
-						<div className="space-y-1 flex-1 min-h-0 overflow-y-auto">
+						<h3 className="font-semibold text-primary mb-3 flex-shrink-0 text-sm uppercase tracking-wide">Yesterday</h3>
+						<div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
 							{dailyTasksYesterday.map((task) => (
 								<div
 									key={task.id}
-									className={`p-2 border border-accent rounded mb-1 ${
+									className={`p-3 border border-accent rounded-lg mb-2 text-sm font-medium ${
 										task.isCompleteYesterday
 											? "bg-accent/10 line-through text-muted"
 											: "bg-accent/20 text-accent"

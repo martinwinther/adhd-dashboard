@@ -58,9 +58,9 @@ export default function Home() {
 		<DndContext onDragEnd={handleDragEnd}>
 			<main className="min-h-screen bg-background">
 				<Navigation />
-				<div className="flex flex-col p-4 gap-4">
+				<div className="flex flex-col p-6 gap-6">
 					{/* Top row - three cards in a row, equal height */}
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
 						<Kanban />
 						<TodaysList />
 						<DailyCheckList />

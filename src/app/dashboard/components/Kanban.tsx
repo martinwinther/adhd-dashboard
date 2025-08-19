@@ -39,7 +39,7 @@ const TaskCard = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`bg-surface border border-accent rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow mb-2 ${isDragging ? "z-50" : ""}`}
+			className={`bg-surface border border-accent rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 mb-3 ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Draggable handle area */}
 			<div 
@@ -47,11 +47,11 @@ const TaskCard = React.memo(({
 				{...attributes}
 				className="cursor-grab"
 			>
-				<div className="flex justify-between items-start mb-2">
-					<h4 className="font-medium text-sm text-primary">{task.title}</h4>
+				<div className="flex justify-between items-start mb-3">
+					<h4 className="font-semibold text-sm text-primary leading-tight">{task.title}</h4>
 				</div>
 				{task.description && (
-					<p className="text-xs text-muted mb-2">{task.description}</p>
+					<p className="text-xs text-muted mb-3 leading-relaxed">{task.description}</p>
 				)}
 			</div>
 			
@@ -61,7 +61,7 @@ const TaskCard = React.memo(({
 				className="flex justify-between items-center"
 			>
 				{/* Action buttons */}
-				<div className="flex gap-1">
+				<div className="flex gap-2">
 					{task.status !== "todo" && (
 						<Button
 							variant="outline"
@@ -70,7 +70,7 @@ const TaskCard = React.memo(({
 								e.stopPropagation();
 								onMove(task.id, "todo");
 							}}
-							className="text-xs h-6 px-2"
+							className="text-xs h-7 px-3 font-medium"
 						>
 							← Todo
 						</Button>
@@ -83,7 +83,7 @@ const TaskCard = React.memo(({
 								e.stopPropagation();
 								onMove(task.id, "in-progress");
 							}}
-							className="text-xs h-6 px-2"
+							className="text-xs h-7 px-3 font-medium"
 						>
 							{task.status === "todo" ? "→ Progress" : "← Progress"}
 						</Button>
@@ -96,7 +96,7 @@ const TaskCard = React.memo(({
 								e.stopPropagation();
 								onMove(task.id, "done");
 							}}
-							className="text-xs h-6 px-2"
+							className="text-xs h-7 px-3 font-medium"
 						>
 							→ Done
 						</Button>
@@ -114,7 +114,7 @@ const TaskCard = React.memo(({
 						console.log("About to call onDelete with task ID:", task.id);
 						onDelete(task.id);
 					}}
-					className="h-6 w-6 p-0 text-muted hover:text-red-500"
+					className="h-7 w-7 p-0 text-muted hover:text-red-500 transition-colors"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -282,9 +282,9 @@ const Kanban = () => {
 			id={status}
 			component="kanban"
 			accepts={["todays", "daily", "weekly"]}
-			className="flex-1 bg-accent/10 border border-accent rounded-lg p-3 flex flex-col min-h-0"
+			className="flex-1 bg-accent/5 border border-accent/30 rounded-lg p-4 flex flex-col min-h-0"
 		>
-			<h3 className="font-semibold text-primary mb-3 text-center flex-shrink-0">{title}</h3>
+			<h3 className="font-semibold text-primary mb-4 text-center flex-shrink-0 text-sm uppercase tracking-wide">{title}</h3>
 			<div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
 				{tasks.map((task) => (
 					<TaskCard 
@@ -305,8 +305,8 @@ const Kanban = () => {
 			title="Kanban Board"
 			className="h-full flex flex-col"
 		>
-			<div className="mb-4 flex-shrink-0">
-				<form onSubmit={addTask} className="space-y-2">
+			<div className="mb-6 flex-shrink-0">
+				<form onSubmit={addTask} className="space-y-3">
 					<Input
 						placeholder="Task title..."
 						value={newTaskTitle}
@@ -324,14 +324,14 @@ const Kanban = () => {
 						variant="secondary"
 						size="sm"
 						disabled={!newTaskTitle.trim()}
-						className="w-full"
+						className="w-full font-medium"
 					>
 						Add Task
 					</Button>
 				</form>
 			</div>
 
-			<div className="flex gap-3 flex-1 min-h-0">
+			<div className="flex gap-4 flex-1 min-h-0">
 				<KanbanColumn
 					title="To Do"
 					status="todo"

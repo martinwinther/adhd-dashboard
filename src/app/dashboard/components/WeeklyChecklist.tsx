@@ -55,10 +55,10 @@ const TaskItem = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`flex items-center justify-between p-1.5 border rounded mb-1 text-xs ${
+			className={`flex items-center justify-between p-2 border rounded-lg transition-all duration-200 mb-2 text-xs ${
 				task.isTemporary 
-					? "bg-accent/20 border-accent" 
-					: "bg-surface border-accent"
+					? "bg-accent/20 border-accent shadow-sm" 
+					: "bg-surface border-accent shadow-sm hover:shadow-md"
 			} ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
@@ -81,10 +81,10 @@ const TaskItem = React.memo(({
 			<div 
 				{...listeners}
 				{...attributes}
-				className="cursor-grab flex items-center flex-1 min-w-0 px-1"
+				className="cursor-grab flex items-center flex-1 min-w-0 px-2"
 			>
 				<span
-					className={`truncate ${
+					className={`truncate font-medium ${
 						task.isComplete ? "line-through text-muted" : "text-primary"
 					}`}
 					style={{
@@ -95,7 +95,7 @@ const TaskItem = React.memo(({
 					{task.task}
 				</span>
 				{task.isTemporary && (
-					<span className="text-xs text-accent bg-accent/20 px-1 rounded ml-1 flex-shrink-0">
+					<span className="text-xs text-accent bg-accent/20 px-1.5 py-0.5 rounded-full ml-1 flex-shrink-0 font-medium">
 						temp
 					</span>
 				)}
@@ -113,7 +113,7 @@ const TaskItem = React.memo(({
 				<Button
 					variant="ghost"
 					size="sm"
-					className="h-5 w-5 p-0 text-muted hover:text-red-500 flex-shrink-0"
+					className="h-5 w-5 p-0 text-muted hover:text-red-500 flex-shrink-0 transition-colors"
 				>
 					<TrashIcon className="h-3 w-3" />
 				</Button>
@@ -155,23 +155,23 @@ const DayColumn = React.memo(({
 			id={day}
 			component="weekly"
 			accepts={["kanban", "todays", "daily"]}
-							className="flex flex-col bg-accent/10 border border-accent rounded-lg p-2 sm:p-3 min-h-0"
+			className="flex flex-col bg-accent/5 border border-accent/30 rounded-lg p-3 sm:p-4 min-h-0"
 		>
-			<div className="flex items-center justify-between mb-2 sm:mb-3 flex-shrink-0">
-				<h3 className="text-xs sm:text-sm font-bold capitalize truncate">{day}</h3>
+			<div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
+				<h3 className="text-xs sm:text-sm font-bold capitalize truncate text-primary">{day}</h3>
 				{day === "sunday" && (
 					<Button
 						variant="outline"
 						size="sm"
 						onClick={onReset}
-						className="text-xs h-5 sm:h-6 px-1 sm:px-2"
+						className="text-xs h-6 sm:h-7 px-2 sm:px-3 font-medium"
 					>
 						Reset
 					</Button>
 				)}
 			</div>
 
-			<div className="space-y-1 mb-4 flex-1 min-h-0 overflow-y-auto">
+			<div className="space-y-2 mb-4 flex-1 min-h-0 overflow-y-auto">
 				{tasks.map((task) => (
 					<TaskItem
 						key={task.id}
@@ -182,19 +182,19 @@ const DayColumn = React.memo(({
 				))}
 			</div>
 
-			<form onSubmit={handleAddTask} className="space-y-1 sm:space-y-2 flex-shrink-0">
+			<form onSubmit={handleAddTask} className="space-y-2 sm:space-y-3 flex-shrink-0">
 				<Input
 					placeholder="Add task..."
 					value={newTaskTitle}
 					onChange={(e) => setNewTaskTitle(e.target.value)}
-					className="text-xs h-7 sm:h-8"
+					className="text-xs h-8 sm:h-9"
 				/>
 				<Button
 					type="submit"
 					variant="secondary"
 					size="sm"
 					disabled={!newTaskTitle.trim()}
-					className="w-full h-7 sm:h-8 text-xs"
+					className="w-full h-8 sm:h-9 text-xs font-medium"
 				>
 					Add Task
 				</Button>
@@ -383,7 +383,7 @@ const WeeklyChecklist = () => {
 		>
 			<div className="flex-1 flex flex-col min-h-0">
 				{/* Responsive grid layout - adapts to screen size */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-2 lg:gap-3 h-full">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-3 lg:gap-4 h-full">
 					{daysOfWeek.map((day) => (
 						<DayColumn
 							key={day}

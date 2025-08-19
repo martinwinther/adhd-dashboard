@@ -16,21 +16,21 @@ export const Card: React.FC<CardProps> = ({
 }) => {
 	return (
 		<div className={cn(
-			"bg-surface rounded-lg border border-accent shadow-sm overflow-hidden",
-			"flex flex-col min-h-0", // Ensures proper flex behavior
+			"bg-surface rounded-xl border-2 border-accent shadow-md overflow-hidden transition-all duration-200",
+			"flex flex-col min-h-0 hover:shadow-lg", // Enhanced hover effect
 			className
 		)}>
 			{(title || subtitle) && (
-				<div className="px-4 py-3 border-b border-accent/60 bg-accent/10">
+				<div className="px-6 py-4 border-b-2 border-accent/60 bg-accent/10">
 					{title && (
-						<h2 className="text-lg font-semibold text-primary">{title}</h2>
+						<h2 className="text-xl font-bold text-primary tracking-tight">{title}</h2>
 					)}
 					{subtitle && (
-						<p className="text-sm text-muted mt-1">{subtitle}</p>
+						<p className="text-sm text-muted mt-1 font-semibold">{subtitle}</p>
 					)}
 				</div>
 			)}
-			<div className="flex-1 p-4 min-h-0">
+			<div className="flex-1 p-6 min-h-0">
 				{children}
 			</div>
 		</div>

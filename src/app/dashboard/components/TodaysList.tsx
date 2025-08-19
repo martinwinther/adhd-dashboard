@@ -42,18 +42,18 @@ const TaskItem = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`flex items-center justify-between p-3 border rounded-lg transition-colors mb-2 ${
+			className={`flex items-center justify-between p-4 border rounded-lg transition-all duration-200 mb-3 ${
 				task.isComplete
-					? "bg-accent/10 border-accent"
+					? "bg-accent/10 border-accent/50"
 					: task.isPriority
-					? "bg-accent/20 border-accent"
-					: "bg-surface border-accent"
+					? "bg-accent/20 border-accent shadow-sm"
+					: "bg-surface border-accent shadow-sm hover:shadow-md"
 			} ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
 			<div 
 				onMouseDown={(e) => e.stopPropagation()} // Prevent drag from starting
-				className="flex items-center space-x-2"
+				className="flex items-center space-x-3"
 			>
 				<input
 					type="checkbox"
@@ -62,7 +62,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation(); // Prevent double-triggering
 						onToggleComplete(task.id);
 					}}
-					className="rounded border-accent text-primary focus:ring-primary"
+					className="rounded border-accent text-primary focus:ring-primary h-4 w-4"
 				/>
 			</div>
 			
@@ -70,10 +70,10 @@ const TaskItem = React.memo(({
 			<div 
 				{...listeners}
 				{...attributes}
-				className="cursor-grab flex items-center space-x-2 flex-1"
+				className="cursor-grab flex items-center space-x-3 flex-1"
 			>
 				<span
-					className={`flex-1 text-sm ${
+					className={`flex-1 text-sm font-medium ${
 						task.isComplete
 							? "line-through text-muted"
 							: "text-primary"
@@ -89,7 +89,7 @@ const TaskItem = React.memo(({
 			{/* Non-draggable action buttons area */}
 			<div 
 				onMouseDown={(e) => e.stopPropagation()} // Prevent drag from starting
-				className="flex items-center space-x-1"
+				className="flex items-center space-x-2"
 			>
 				<Button
 					variant="ghost"
@@ -98,7 +98,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation();
 						onTogglePriority(task.id);
 					}}
-					className={`h-6 w-6 p-0 ${
+					className={`h-7 w-7 p-0 transition-colors ${
 						task.isPriority
 							? "text-accent"
 							: "text-muted hover:text-accent"
@@ -118,7 +118,7 @@ const TaskItem = React.memo(({
 						e.preventDefault();
 						onDelete(task.id);
 					}}
-					className="h-6 w-6 p-0 text-muted hover:text-red-500"
+					className="h-7 w-7 p-0 text-muted hover:text-red-500 transition-colors"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -309,9 +309,9 @@ const TodaysList = () => {
 				accepts={["kanban", "daily", "weekly"]}
 				className="h-full flex flex-col"
 			>
-				<div className="mb-4 flex-shrink-0">
+				<div className="mb-6 flex-shrink-0">
 				
-				<form onSubmit={addTask} className="space-y-2">
+				<form onSubmit={addTask} className="space-y-3">
 					<Input
 						placeholder="What&apos;s your focus today?"
 						value={newTaskTitle}
@@ -323,14 +323,14 @@ const TodaysList = () => {
 						variant="secondary"
 						size="sm"
 						disabled={!newTaskTitle.trim()}
-						className="w-full"
+						className="w-full font-medium"
 					>
 						Add Focus Task
 					</Button>
 				</form>
 			</div>
 
-			<div className="space-y-2 mb-4 flex-1 min-h-0 overflow-y-auto">
+			<div className="space-y-2 mb-6 flex-1 min-h-0 overflow-y-auto">
 				{sortedTasks.map((task) => (
 					<TaskItem
 						key={task.id}
@@ -348,7 +348,7 @@ const TodaysList = () => {
 						variant="outline"
 						size="sm"
 						onClick={clearCompleted}
-						className="text-xs"
+						className="text-xs font-medium"
 					>
 						Clear Completed
 					</Button>
@@ -356,7 +356,7 @@ const TodaysList = () => {
 			)}
 
 			{tasks.length === 0 && (
-				<div className="text-center text-muted text-sm py-4 flex-1 flex items-center justify-center">
+				<div className="text-center text-muted text-sm py-8 flex-1 flex items-center justify-center">
 					No focus tasks for today. Add your most important tasks here!
 				</div>
 			)}
