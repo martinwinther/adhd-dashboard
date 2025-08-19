@@ -55,8 +55,8 @@ const TaskItem = React.memo(({
 			style={style}
 			className={`flex items-center justify-between p-2 border rounded mb-1 ${
 				task.isTemporary 
-					? "bg-blue-50 border-blue-200" 
-					: "bg-white border-gray-200"
+					? "bg-accent/20 border-accent" 
+					: "bg-surface border-accent"
 			} ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
@@ -71,7 +71,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation(); // Prevent double-triggering
 						onToggleComplete(task.id, task.isComplete);
 					}}
-					className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+					className="rounded border-accent text-primary focus:ring-primary"
 				/>
 			</div>
 			
@@ -83,7 +83,7 @@ const TaskItem = React.memo(({
 			>
 				<span
 					className={`${
-						task.isComplete ? "line-through text-gray-500" : "text-gray-900"
+						task.isComplete ? "line-through text-muted" : "text-primary"
 					}`}
 					style={{
 						textDecoration: task.isComplete ? 'line-through' : 'none'
@@ -92,7 +92,7 @@ const TaskItem = React.memo(({
 					{task.task}
 				</span>
 				{task.isTemporary && (
-					<span className="text-xs text-blue-600 bg-blue-100 px-1 rounded">
+					<span className="text-xs text-accent bg-accent/20 px-1 rounded">
 						temp
 					</span>
 				)}
@@ -110,7 +110,7 @@ const TaskItem = React.memo(({
 				<Button
 					variant="ghost"
 					size="sm"
-					className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+					className="h-6 w-6 p-0 text-muted hover:text-red-500"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -271,7 +271,7 @@ const DailyChecklist = () => {
 	return (
 		<Card 
 			title="Daily Checklist"
-			className="h-full"
+			className="h-full flex flex-col"
 		>
 			<DroppableZone
 				id="main"
@@ -279,7 +279,7 @@ const DailyChecklist = () => {
 				accepts={["kanban", "todays", "weekly"]}
 				className="h-full flex flex-col"
 			>
-				<div className="mb-4">
+				<div className="mb-4 flex-shrink-0">
 				<form onSubmit={addTask} className="space-y-2">
 					<Input
 						placeholder="Add daily task..."
@@ -299,11 +299,11 @@ const DailyChecklist = () => {
 				</form>
 			</div>
 
-			<div className="flex gap-4">
+			<div className="flex gap-4 flex-1 min-h-0">
 				{/* Today's tasks */}
-				<div className="flex-1">
-					<h3 className="font-semibold text-gray-800 mb-2">Today</h3>
-					<div className="space-y-1 mb-4">
+				<div className="flex-1 flex flex-col min-h-0">
+					<h3 className="font-semibold text-primary mb-2 flex-shrink-0">Today</h3>
+					<div className="space-y-1 mb-4 flex-1 min-h-0 overflow-y-auto">
 						{dailyTasks.map((task) => (
 							<TaskItem
 								key={task.id}
@@ -313,7 +313,7 @@ const DailyChecklist = () => {
 							/>
 						))}
 					</div>
-					<div className="flex gap-2">
+					<div className="flex gap-2 flex-shrink-0">
 						<Button
 							variant="outline"
 							size="sm"
@@ -335,16 +335,16 @@ const DailyChecklist = () => {
 
 				{/* Yesterday's tasks */}
 				{dailyTasksYesterday.length > 0 && (
-					<div className="flex-1">
-						<h3 className="font-semibold text-gray-800 mb-2">Yesterday</h3>
-						<div className="space-y-1">
+					<div className="flex-1 flex flex-col min-h-0">
+						<h3 className="font-semibold text-primary mb-2 flex-shrink-0">Yesterday</h3>
+						<div className="space-y-1 flex-1 min-h-0 overflow-y-auto">
 							{dailyTasksYesterday.map((task) => (
 								<div
 									key={task.id}
-									className={`p-2 border border-gray-200 rounded mb-1 ${
+									className={`p-2 border border-accent rounded mb-1 ${
 										task.isCompleteYesterday
-											? "bg-gray-50 line-through text-gray-500"
-											: "bg-red-50 text-red-600"
+											? "bg-accent/10 line-through text-muted"
+											: "bg-accent/20 text-accent"
 									}`}
 								>
 									{task.task}

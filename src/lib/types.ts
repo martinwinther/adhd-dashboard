@@ -39,3 +39,10 @@ export interface TodaysTask {
 	created_at?: string;
 	updated_at?: string;
 }
+
+export type Theme = 'light' | 'dark' | 'monastic';
+
+export interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}

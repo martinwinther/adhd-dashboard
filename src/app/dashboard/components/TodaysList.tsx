@@ -44,10 +44,10 @@ const TaskItem = React.memo(({
 			style={style}
 			className={`flex items-center justify-between p-3 border rounded-lg transition-colors mb-2 ${
 				task.isComplete
-					? "bg-gray-50 border-gray-200"
+					? "bg-accent/10 border-accent"
 					: task.isPriority
-					? "bg-yellow-50 border-yellow-200"
-					: "bg-white border-gray-200"
+					? "bg-accent/20 border-accent"
+					: "bg-surface border-accent"
 			} ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
@@ -62,7 +62,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation(); // Prevent double-triggering
 						onToggleComplete(task.id);
 					}}
-					className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+					className="rounded border-accent text-primary focus:ring-primary"
 				/>
 			</div>
 			
@@ -75,8 +75,8 @@ const TaskItem = React.memo(({
 				<span
 					className={`flex-1 text-sm ${
 						task.isComplete
-							? "line-through text-gray-500"
-							: "text-gray-900"
+							? "line-through text-muted"
+							: "text-primary"
 					}`}
 					style={{
 						textDecoration: task.isComplete ? 'line-through' : 'none'
@@ -100,8 +100,8 @@ const TaskItem = React.memo(({
 					}}
 					className={`h-6 w-6 p-0 ${
 						task.isPriority
-							? "text-yellow-500"
-							: "text-gray-400 hover:text-yellow-500"
+							? "text-accent"
+							: "text-muted hover:text-accent"
 					}`}
 				>
 					{task.isPriority ? (
@@ -118,7 +118,7 @@ const TaskItem = React.memo(({
 						e.preventDefault();
 						onDelete(task.id);
 					}}
-					className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+					className="h-6 w-6 p-0 text-muted hover:text-red-500"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -301,7 +301,7 @@ const TodaysList = () => {
 		<Card 
 			title="Today's Focus"
 			subtitle={`${completedCount}/${totalCount} done`}
-			className="h-full"
+			className="h-full flex flex-col"
 		>
 			<DroppableZone
 				id="main"
@@ -309,7 +309,7 @@ const TodaysList = () => {
 				accepts={["kanban", "daily", "weekly"]}
 				className="h-full flex flex-col"
 			>
-				<div className="mb-4">
+				<div className="mb-4 flex-shrink-0">
 				
 				<form onSubmit={addTask} className="space-y-2">
 					<Input
@@ -330,7 +330,7 @@ const TodaysList = () => {
 				</form>
 			</div>
 
-			<div className="space-y-2 mb-4">
+			<div className="space-y-2 mb-4 flex-1 min-h-0 overflow-y-auto">
 				{sortedTasks.map((task) => (
 					<TaskItem
 						key={task.id}
@@ -343,7 +343,7 @@ const TodaysList = () => {
 			</div>
 
 			{completedCount > 0 && (
-				<div className="flex justify-center">
+				<div className="flex justify-center flex-shrink-0">
 					<Button
 						variant="outline"
 						size="sm"
@@ -356,7 +356,7 @@ const TodaysList = () => {
 			)}
 
 			{tasks.length === 0 && (
-				<div className="text-center text-gray-500 text-sm py-4">
+				<div className="text-center text-muted text-sm py-4 flex-1 flex items-center justify-center">
 					No focus tasks for today. Add your most important tasks here!
 				</div>
 			)}

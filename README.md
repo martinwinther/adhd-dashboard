@@ -4,6 +4,17 @@ run "npm install"
 
 run "npm dev" to run the dev server
 
+## Features
+
+### Theme System
+The dashboard supports three different themes that can be switched via the user menu:
+
+- **Light Theme**: Clean and bright interface with light backgrounds
+- **Dark Theme**: Easy on the eyes with dark backgrounds  
+- **Monastic Theme**: Warm and focused with earthy tones
+
+To change themes, click the user icon in the top-right corner and select your preferred theme from the dropdown menu.
+
 ## Links to look at
 
 - [NextJS-getting-started](https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app)
@@ -25,6 +36,7 @@ run "npm dev" to run the dev server
   - [x] Update
   - [x] Delete
 - [x] Restructure and cleanup components
+- [x] add theme system with light, dark, and monastic themes
 - [ ] add user authentication
   - [ ] connect users to checklist tables
   - [ ] create providers for auth

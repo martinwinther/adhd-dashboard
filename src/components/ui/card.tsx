@@ -16,17 +16,17 @@ export const Card: React.FC<CardProps> = ({
 }) => {
 	return (
 		<div className={cn(
-			"bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden",
+			"bg-surface rounded-lg border border-accent shadow-sm overflow-hidden",
 			"flex flex-col min-h-0", // Ensures proper flex behavior
 			className
 		)}>
 			{(title || subtitle) && (
-				<div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
+				<div className="px-4 py-3 border-b border-accent/60 bg-accent/10">
 					{title && (
-						<h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+						<h2 className="text-lg font-semibold text-primary">{title}</h2>
 					)}
 					{subtitle && (
-						<p className="text-sm text-gray-600 mt-1">{subtitle}</p>
+						<p className="text-sm text-muted mt-1">{subtitle}</p>
 					)}
 				</div>
 			)}

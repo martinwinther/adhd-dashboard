@@ -3,7 +3,6 @@ import Navigation from "@/components/Navigation";
 import Kanban from "@/app/dashboard/components/Kanban";
 import WeeklyChecklist from "@/app/dashboard/components/WeeklyChecklist";
 import DailyCheckList from "@/app/dashboard/components/DailyChecklist";
-import Footer from "@/components/Footer";
 import TodaysList from "@/app/dashboard/components/TodaysList";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
@@ -57,22 +56,21 @@ export default function Home() {
 
 	return (
 		<DndContext onDragEnd={handleDragEnd}>
-			<main className="flex flex-col h-screen">
+			<main className="min-h-screen bg-background">
 				<Navigation />
-				<div className="flex flex-col flex-1 p-4 gap-4">
-					{/* Top row - three cards in a row */}
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1">
+				<div className="flex flex-col p-4 gap-4">
+					{/* Top row - three cards in a row, equal height */}
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
 						<Kanban />
 						<TodaysList />
 						<DailyCheckList />
 					</div>
 
-					{/* Bottom section - Weekly Checklist takes about 30% of space */}
-					<div className="h-1/3 min-h-0">
+					{/* Bottom section - Weekly Checklist with flexible height */}
+					<div className="flex-1 min-h-0">
 						<WeeklyChecklist />
 					</div>
 				</div>
-				<Footer />
 			</main>
 		</DndContext>
 	);

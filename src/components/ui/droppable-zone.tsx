@@ -30,8 +30,8 @@ export const DroppableZone: React.FC<DroppableZoneProps> = ({
 	});
 
 	const dropZoneStyle = {
-		backgroundColor: isOver ? "rgba(59, 130, 246, 0.1)" : "transparent",
-		border: isOver ? "2px dashed #3b82f6" : "none",
+		backgroundColor: isOver ? "rgba(100, 116, 139, 0.1)" : "transparent",
+		border: isOver ? "2px dashed #64748b" : "none",
 		borderRadius: "8px",
 		transition: "all 0.2s ease",
 	};
@@ -40,7 +40,7 @@ export const DroppableZone: React.FC<DroppableZoneProps> = ({
 		<div
 			ref={setNodeRef}
 			style={{ ...dropZoneStyle, ...style }}
-			className={`${className} ${isOver ? "ring-2 ring-blue-500" : ""}`}
+			className={`${className} ${isOver ? "ring-2 ring-accent" : ""}`}
 		>
 			{children}
 		</div>

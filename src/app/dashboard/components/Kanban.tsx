@@ -39,7 +39,7 @@ const TaskCard = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow mb-2 ${isDragging ? "z-50" : ""}`}
+			className={`bg-surface border border-accent rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow mb-2 ${isDragging ? "z-50" : ""}`}
 		>
 			{/* Draggable handle area */}
 			<div 
@@ -48,10 +48,10 @@ const TaskCard = React.memo(({
 				className="cursor-grab"
 			>
 				<div className="flex justify-between items-start mb-2">
-					<h4 className="font-medium text-sm text-gray-900">{task.title}</h4>
+					<h4 className="font-medium text-sm text-primary">{task.title}</h4>
 				</div>
 				{task.description && (
-					<p className="text-xs text-gray-600 mb-2">{task.description}</p>
+					<p className="text-xs text-muted mb-2">{task.description}</p>
 				)}
 			</div>
 			
@@ -114,7 +114,7 @@ const TaskCard = React.memo(({
 						console.log("About to call onDelete with task ID:", task.id);
 						onDelete(task.id);
 					}}
-					className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+					className="h-6 w-6 p-0 text-muted hover:text-red-500"
 				>
 					<TrashIcon className="h-4 w-4" />
 				</Button>
@@ -282,10 +282,10 @@ const Kanban = () => {
 			id={status}
 			component="kanban"
 			accepts={["todays", "daily", "weekly"]}
-			className="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-3"
+			className="flex-1 bg-accent/10 border border-accent rounded-lg p-3 flex flex-col min-h-0"
 		>
-			<h3 className="font-semibold text-gray-800 mb-3 text-center">{title}</h3>
-			<div className="space-y-2">
+			<h3 className="font-semibold text-primary mb-3 text-center flex-shrink-0">{title}</h3>
+			<div className="space-y-2 flex-1 min-h-0 overflow-y-auto">
 				{tasks.map((task) => (
 					<TaskCard 
 						key={task.id} 
@@ -303,9 +303,9 @@ const Kanban = () => {
 	return (
 		<Card 
 			title="Kanban Board"
-			className="h-full"
+			className="h-full flex flex-col"
 		>
-			<div className="mb-4">
+			<div className="mb-4 flex-shrink-0">
 				<form onSubmit={addTask} className="space-y-2">
 					<Input
 						placeholder="Task title..."
@@ -331,7 +331,7 @@ const Kanban = () => {
 				</form>
 			</div>
 
-			<div className="flex gap-3">
+			<div className="flex gap-3 flex-1 min-h-0">
 				<KanbanColumn
 					title="To Do"
 					status="todo"
