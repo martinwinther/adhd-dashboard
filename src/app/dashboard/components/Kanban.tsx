@@ -32,14 +32,29 @@ const TaskCard = React.memo(({
 
 	const style = {
 		transform: CSS.Translate.toString(transform),
-		opacity: isDragging ? 0.5 : 1,
+		opacity: isDragging ? 0 : 1, // Make completely invisible when dragging
+		// Add hardware acceleration
+		willChange: "transform",
+		transformOrigin: "center",
+		// Ensure smooth animations
+		transition: isDragging ? "none" : "transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+		// Add visual feedback for dragging state
+		boxShadow: isDragging 
+			? "0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)" 
+			: "none",
+		// Add a subtle scale effect when dragging
+		scale: isDragging ? "1.05" : "1",
+		// Add a subtle rotation when dragging for better visual feedback
+		rotate: isDragging ? "2deg" : "0deg",
+		// Hide the element completely when dragging
+		visibility: isDragging ? "hidden" as const : "visible" as const,
 	};
 
 	return (
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`bg-surface border border-accent rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 mb-3 ${isDragging ? "z-50" : ""}`}
+			className={`bg-surface border border-accent rounded-lg p-4 shadow-sm hover:shadow-md transition-optimized mb-3 ${isDragging ? "z-50 shadow-2xl" : ""}`}
 		>
 			{/* Draggable handle area */}
 			<div 
@@ -281,7 +296,7 @@ const Kanban = () => {
 		<DroppableZone
 			id={status}
 			component="kanban"
-			accepts={["todays", "daily", "weekly"]}
+			accepts={["kanban", "todays", "daily", "weekly"]}
 			className="flex-1 bg-accent/5 border border-accent/30 rounded-lg p-4 flex flex-col min-h-0"
 		>
 			<h3 className="font-semibold text-primary mb-4 text-center flex-shrink-0 text-sm uppercase tracking-wide">{title}</h3>
