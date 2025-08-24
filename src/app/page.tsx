@@ -1,10 +1,6 @@
-import Link from "next/link";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-	return (
-		<main className="flex flex-col h-screen">
-			<Link href="/dashboard/">Go To Dashboard</Link>
-			<Link href="/login">Login</Link>
-		</main>
-	);
+	// Automatically redirect to dashboard since there's no auth yet
+	redirect('/dashboard');
 }
