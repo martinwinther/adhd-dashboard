@@ -4,7 +4,7 @@ export interface Task {
 	id: number;
 	task: string;
 	isComplete: boolean;
-	isCompleteYesterday?: boolean;
+	isCompleteYesterday?: boolean | null;
 }
 
 export interface TaskWithDay extends Task {
