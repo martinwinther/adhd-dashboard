@@ -22,6 +22,7 @@ interface WeeklyTask {
 	id: number;
 	task: string;
 	isComplete: boolean;
+	isCompleteYesterday?: boolean | null;
 	day: Day;
 	isTemporary?: boolean; // Flag to indicate if this is a dragged task not yet saved to DB
 }

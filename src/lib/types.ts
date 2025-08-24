@@ -25,7 +25,7 @@ export type Day =
 export interface KanbanTask {
 	id: number;
 	title: string;
-	description?: string;
+	description?: string | null;
 	status: "todo" | "in-progress" | "done";
 	created_at?: string;
 	updated_at?: string;

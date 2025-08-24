@@ -380,7 +380,7 @@ export async function fetchKanbanTasks() {
 }
 */
 
-export async function createKanbanTask(id: number, title: string, description: string | null, status: string) {
+export async function createKanbanTask(id: number, title: string, description: string | null, status: "todo" | "in-progress" | "done") {
 	try {
 		const tasks = getFromLocalStorage<KanbanTask>(KANBAN_TASKS_KEY);
 		const newTask: KanbanTask = {
@@ -400,7 +400,7 @@ export async function createKanbanTask(id: number, title: string, description: s
 }
 
 /* Original database version - commented out
-export async function createKanbanTask(id: number, title: string, description: string | null, status: string) {
+export async function createKanbanTask(id: number, title: string, description: string | null, status: "todo" | "in-progress" | "done") {
 	try {
 		await sql\`INSERT INTO adhd_kanban_tasks (id, title, description, status) VALUES (\${id}, \${title}, \${description}, \${status});\`;
 	} catch (error) {
@@ -410,7 +410,7 @@ export async function createKanbanTask(id: number, title: string, description: s
 }
 */
 
-export async function updateKanbanTaskStatus(id: number, status: string) {
+export async function updateKanbanTaskStatus(id: number, status: "todo" | "in-progress" | "done") {
 	// noStore(); // Commented out for local storage
 	try {
 		const tasks = getFromLocalStorage<KanbanTask>(KANBAN_TASKS_KEY);
@@ -427,7 +427,7 @@ export async function updateKanbanTaskStatus(id: number, status: string) {
 }
 
 /* Original database version - commented out
-export async function updateKanbanTaskStatus(id: number, status: string) {
+export async function updateKanbanTaskStatus(id: number, status: "todo" | "in-progress" | "done") {
 	noStore();
 	try {
 		await sql\`UPDATE adhd_kanban_tasks SET status = \${status}, updated_at = CURRENT_TIMESTAMP WHERE id = \${id};\`;
