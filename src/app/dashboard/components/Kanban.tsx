@@ -186,7 +186,7 @@ const Kanban = () => {
 	useEffect(() => {
 		const handleTaskMoved = async (event: Event) => {
 			const customEvent = event as CustomEvent;
-			const { taskId, fromComponent, toComponent, toData } = customEvent.detail;
+			const { taskId, fromComponent, toComponent, toData, isCopy } = customEvent.detail;
 			console.log("Kanban received task-moved event:", { taskId, fromComponent, toComponent, toData });
 			
 			if (toComponent === "kanban") {
@@ -216,19 +216,24 @@ const Kanban = () => {
 				}
 			} else if (fromComponent === "kanban") {
 				// Remove the task from kanban if it's being moved to another component
-				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
-				console.log("Task being moved out of kanban:", numericTaskId);
-				
-				try {
-					// Delete from database
-					await deleteKanbanTask(numericTaskId);
-					// Update local state
-					setTasks(prev => prev.filter(task => {
-						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-						return taskIdNum !== numericTaskId;
-					}));
-				} catch (error) {
-					console.error("Error deleting kanban task when moved out:", error);
+				// BUT NOT if it's a copy operation
+				if (!isCopy) {
+					const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+					console.log("Task being moved out of kanban:", numericTaskId);
+					
+					try {
+						// Delete from database
+						await deleteKanbanTask(numericTaskId);
+						// Update local state
+						setTasks(prev => prev.filter(task => {
+							const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+							return taskIdNum !== numericTaskId;
+						}));
+					} catch (error) {
+						console.error("Error deleting kanban task when moved out:", error);
+					}
+				} else {
+					console.log("Copy operation - keeping task in kanban");
 				}
 			}
 		};

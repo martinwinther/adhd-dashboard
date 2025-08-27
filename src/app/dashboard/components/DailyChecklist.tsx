@@ -159,7 +159,7 @@ const DailyChecklist = () => {
 	// Listen for task drops from other components
 	useEffect(() => {
 		const handleTaskMoved = async (event: CustomEvent) => {
-			const { taskId, fromComponent, toComponent, toData } = event.detail;
+			const { taskId, fromComponent, toComponent, toData, isCopy } = event.detail;
 			if (toComponent === "daily") {
 				// Only add the task if it's coming from a different component
 				if (fromComponent !== "daily") {
@@ -181,18 +181,23 @@ const DailyChecklist = () => {
 				}
 			} else if (fromComponent === "daily") {
 				// Remove the task from daily if it's being moved to another component
-				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
-				
-				try {
-					// Delete from database
-					await deleteDailyTasks([numericTaskId]);
-					// Update local state
-					setDailyTasks(prev => prev.filter(task => {
-						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-						return taskIdNum !== numericTaskId;
-					}));
-				} catch (error) {
-					console.error("Error deleting daily task when moved out:", error);
+				// BUT NOT if it's a copy operation
+				if (!isCopy) {
+					const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+					
+					try {
+						// Delete from database
+						await deleteDailyTasks([numericTaskId]);
+						// Update local state
+						setDailyTasks(prev => prev.filter(task => {
+							const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+							return taskIdNum !== numericTaskId;
+						}));
+					} catch (error) {
+						console.error("Error deleting daily task when moved out:", error);
+					}
+				} else {
+					console.log("Copy operation - keeping task in daily checklist");
 				}
 			}
 		};

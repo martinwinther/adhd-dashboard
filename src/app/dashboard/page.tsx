@@ -88,12 +88,17 @@ export default function Home() {
 					toData.day = zoneId;
 				}
 
+				// Determine if this should be a copy operation
+				// Copy when dragging TO TodaysList from another component
+				const isCopyOperation = toComponent === "todays" && fromComponent !== "todays";
+				
 				const event = new CustomEvent("task-moved", {
 					detail: {
 						taskId: parseInt(taskId),
 						fromComponent,
 						toComponent,
 						toData,
+						isCopy: isCopyOperation,
 					},
 				});
 				window.dispatchEvent(event);

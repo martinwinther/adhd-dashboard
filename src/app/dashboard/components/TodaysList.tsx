@@ -165,8 +165,8 @@ const TodaysList = () => {
 	// Listen for task drops from other components
 	useEffect(() => {
 		const handleTaskMoved = async (event: CustomEvent) => {
-			const { taskId, fromComponent, toComponent, toData } = event.detail;
-			console.log("Today's Focus received task-moved event:", { taskId, fromComponent, toComponent, toData });
+			const { taskId, fromComponent, toComponent, toData, isCopy } = event.detail;
+			console.log("Today's Focus received task-moved event:", { taskId, fromComponent, toComponent, toData, isCopy });
 			
 			if (toComponent === "todays") {
 				// Only add the task if it's coming from a different component

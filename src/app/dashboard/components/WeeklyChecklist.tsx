@@ -241,7 +241,7 @@ const WeeklyChecklist = () => {
 	useEffect(() => {
 		const handleTaskMoved = async (event: Event) => {
 			const customEvent = event as CustomEvent;
-			const { taskId, fromComponent, toComponent, toData } = customEvent.detail;
+			const { taskId, fromComponent, toComponent, toData, isCopy } = customEvent.detail;
 			
 			if (toComponent === "weekly") {
 				// Handle internal weekly moves (between days)
@@ -294,19 +294,24 @@ const WeeklyChecklist = () => {
 				}
 			} else if (fromComponent === "weekly") {
 				// Remove the task from weekly if it's being moved to another component
-				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
-				
-				try {
-					// Delete from database
-					await deleteWeeklyTasks(numericTaskId);
-					// Update local state
-					setWeeklyTasks(prev => prev.filter(task => {
-						// Convert task.id to number for comparison if it's a string
-						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-						return taskIdNum !== numericTaskId;
-					}));
-				} catch (error) {
-					console.error("Error deleting weekly task when moved out:", error);
+				// BUT NOT if it's a copy operation
+				if (!isCopy) {
+					const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+					
+					try {
+						// Delete from database
+						await deleteWeeklyTasks(numericTaskId);
+						// Update local state
+						setWeeklyTasks(prev => prev.filter(task => {
+							// Convert task.id to number for comparison if it's a string
+							const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+							return taskIdNum !== numericTaskId;
+						}));
+					} catch (error) {
+						console.error("Error deleting weekly task when moved out:", error);
+					}
+				} else {
+					console.log("Copy operation - keeping task in weekly checklist");
 				}
 			}
 		};
