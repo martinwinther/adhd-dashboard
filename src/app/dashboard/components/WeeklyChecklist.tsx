@@ -238,89 +238,87 @@ const WeeklyChecklist = () => {
 	}, []);
 
 	// Listen for task drops from other components
-	useEffect(() => {
-		const handleTaskMoved = async (event: Event) => {
-			const customEvent = event as CustomEvent;
-			const { taskId, fromComponent, toComponent, toData, isCopy } = customEvent.detail;
-			
-			if (toComponent === "weekly") {
-				// Handle internal weekly moves (between days)
-				if (fromComponent === "weekly") {
-					// Find the task being moved - handle both string and number IDs
-					const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
-					const taskToMove = weeklyTasks.find(task => {
+	const handleTaskMoved = useCallback(async (event: Event) => {
+		const customEvent = event as CustomEvent;
+		const { taskId, fromComponent, toComponent, toData, isCopy } = customEvent.detail;
+		
+		if (toComponent === "weekly") {
+			// Handle internal weekly moves (between days)
+			if (fromComponent === "weekly") {
+				// Find the task being moved - handle both string and number IDs
+				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+				const taskToMove = weeklyTasks.find(task => {
+					// Convert task.id to number for comparison if it's a string
+					const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+					return taskIdNum === numericTaskId;
+				});
+				
+				if (taskToMove && toData.day && taskToMove.day !== toData.day) {
+					// Update the task's day in local state
+					setWeeklyTasks(prev => prev.map(task => {
 						// Convert task.id to number for comparison if it's a string
 						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-						return taskIdNum === numericTaskId;
-					});
+						return taskIdNum === numericTaskId 
+							? { ...task, day: toData.day as Day }
+							: task;
+					}));
 					
-					if (taskToMove && toData.day && taskToMove.day !== toData.day) {
-						// Update the task's day in local state
-						setWeeklyTasks(prev => prev.map(task => {
-							// Convert task.id to number for comparison if it's a string
-							const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-							return taskIdNum === numericTaskId 
-								? { ...task, day: toData.day as Day }
-								: task;
-						}));
-						
-						// Update the task's day in database (only for permanent tasks)
-						if (!taskToMove.isTemporary) {
-							try {
-								await updateWeeklyTaskDay(numericTaskId, toData.day as Day);
-							} catch (error) {
-								console.error("Error updating task day in database:", error);
-							}
+					// Update the task's day in database (only for permanent tasks)
+					if (!taskToMove.isTemporary) {
+						try {
+							await updateWeeklyTaskDay(numericTaskId, toData.day as Day);
+						} catch (error) {
+							console.error("Error updating task day in database:", error);
 						}
 					}
-				} else {
-					// Handle external component drops
-					const newTask: WeeklyTask = {
-						id: Date.now(),
-						task: toData.title || toData.task || "Imported Task",
-						isComplete: false,
-						day: toData.day || "monday",
-						isTemporary: false, // Mark as permanent (save to database)
-					};
-					
-					try {
-						// Save to database
-						await createWeeklyTasks(newTask.id, newTask.task, newTask.day);
-						// Update local state
-						setWeeklyTasks(prev => [...prev, newTask]);
-					} catch (error) {
-						console.error("Error creating weekly task from drag:", error);
-					}
 				}
-			} else if (fromComponent === "weekly") {
-				// Remove the task from weekly if it's being moved to another component
-				// BUT NOT if it's a copy operation
-				if (!isCopy) {
-					const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
-					
-					try {
-						// Delete from database
-						await deleteWeeklyTasks(numericTaskId);
-						// Update local state
-						setWeeklyTasks(prev => prev.filter(task => {
-							// Convert task.id to number for comparison if it's a string
-							const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-							return taskIdNum !== numericTaskId;
-						}));
-					} catch (error) {
-						console.error("Error deleting weekly task when moved out:", error);
-					}
-				} else {
-					console.log("Copy operation - keeping task in weekly checklist");
+			} else {
+				// Handle external component drops
+				const newTask: WeeklyTask = {
+					id: Date.now(),
+					task: toData.title || toData.task || "Imported Task",
+					isComplete: false,
+					day: toData.day || "monday",
+					isTemporary: false, // Mark as permanent (save to database)
+				};
+				
+				try {
+					// Save to database
+					await createWeeklyTasks(newTask.id, newTask.task, newTask.day);
+					// Update local state
+					setWeeklyTasks(prev => [...prev, newTask]);
+				} catch (error) {
+					console.error("Error creating weekly task from drag:", error);
 				}
 			}
-		};
+		} else if (fromComponent === "weekly") {
+			// Remove the task from weekly if it's being moved to another component
+			// BUT NOT if it's a copy operation
+			if (!isCopy) {
+				const numericTaskId = typeof taskId === 'string' ? parseInt(taskId) : taskId;
+				
+				try {
+					// Delete from database
+					await deleteWeeklyTasks(numericTaskId);
+					// Update local state
+					setWeeklyTasks(prev => prev.filter(task => {
+						// Convert task.id to number for comparison if it's a string
+						const taskIdNum = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+						return taskIdNum !== numericTaskId;
+					}));
+				} catch (error) {
+					console.error("Error deleting weekly task when moved out:", error);
+				}
+			}
+		}
+	}, [weeklyTasks]);
 
+	useEffect(() => {
 		window.addEventListener("task-moved", handleTaskMoved);
 		return () => {
 			window.removeEventListener("task-moved", handleTaskMoved);
 		};
-	}, [weeklyTasks]);
+	}, [handleTaskMoved]);
 
 	const addTask = useCallback(async (taskDescription: string, day: Day) => {
 		const newTask: WeeklyTask = {
