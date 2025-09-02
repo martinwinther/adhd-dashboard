@@ -71,10 +71,10 @@ const TaskItem = React.memo(({
 		<div
 			ref={setNodeRef}
 			style={style}
-			className={`flex items-center justify-between p-2 border rounded-lg transition-optimized mb-2 text-xs ${
+			className={`flex items-center gap-3 p-3 border rounded-xl transition-all duration-200 text-sm ${
 				task.isTemporary 
-					? "bg-accent/20 border-accent shadow-sm" 
-					: "bg-surface border-accent shadow-sm hover:shadow-md"
+					? "bg-blue-50 border-blue-200 shadow-sm" 
+					: "bg-white border-gray-200 shadow-sm hover:shadow-lg hover:bg-white hover:border-gray-300 hover:scale-[1.02]"
 			} ${isDragging ? "z-50 shadow-2xl" : ""}`}
 		>
 			{/* Non-draggable checkbox area */}
@@ -89,7 +89,7 @@ const TaskItem = React.memo(({
 						e.stopPropagation(); // Prevent double-triggering
 						onToggleComplete(task.id, !task.isComplete);
 					}}
-					className="rounded border-accent text-primary focus:ring-primary h-3 w-3"
+					className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4"
 				/>
 			</div>
 			
@@ -97,11 +97,11 @@ const TaskItem = React.memo(({
 			<div 
 				{...listeners}
 				{...attributes}
-				className="cursor-grab flex items-center flex-1 min-w-0 px-2"
+				className="cursor-grab flex items-center flex-1 min-w-0"
 			>
 				<span
 					className={`truncate font-medium ${
-						task.isComplete ? "line-through text-muted" : "text-primary"
+						task.isComplete ? "line-through text-gray-500" : "text-gray-900"
 					}`}
 					style={{
 						textDecoration: task.isComplete ? 'line-through' : 'none'
@@ -111,7 +111,7 @@ const TaskItem = React.memo(({
 					{task.task}
 				</span>
 				{task.isTemporary && (
-					<span className="text-xs text-accent bg-accent/20 px-1.5 py-0.5 rounded-full ml-1 flex-shrink-0 font-medium">
+					<span className="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full ml-2 flex-shrink-0 font-medium">
 						temp
 					</span>
 				)}
@@ -129,7 +129,7 @@ const TaskItem = React.memo(({
 				<Button
 					variant="ghost"
 					size="sm"
-					className="h-5 w-5 p-0 text-muted hover:text-red-500 flex-shrink-0 transition-colors"
+					className="h-6 w-6 p-0 text-gray-400 hover:text-red-500 flex-shrink-0 transition-colors hover:bg-red-50"
 				>
 					<TrashIcon className="h-3 w-3" />
 				</Button>
@@ -167,55 +167,58 @@ const DayColumn = React.memo(({
 	};
 
 	return (
-		<DroppableZone
-			id={day}
-			component="weekly"
-			accepts={["weekly", "kanban", "todays", "daily"]}
-			className="flex flex-col bg-accent/5 border border-accent/30 p-3 sm:p-4 min-h-0"
-		>
-			<div className="flex items-center justify-between mb-3 sm:mb-4 flex-shrink-0">
-				<h3 className="text-xs sm:text-sm font-bold capitalize truncate text-primary">{day}</h3>
-				{day === "sunday" && (
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={onReset}
-						className="text-xs h-6 sm:h-7 px-2 sm:px-3 font-medium"
-					>
-						Reset
-					</Button>
-				)}
-			</div>
+		<div style={{ height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: 'rgb(249 250 251 / 0.5)', width: '100%', padding: '16px', borderRight: '1px solid rgb(229 231 235)', transition: 'colors 200ms' }} className="last:border-r-0 hover:bg-gray-50">
+			<DroppableZone
+				id={day}
+				component="weekly"
+				accepts={["weekly", "kanban", "todays", "daily"]}
+				style={{ height: '100%', display: 'flex', flexDirection: 'column', flex: '1' }}
+				className="w-full"
+			>
+				<div className="flex items-center justify-between mb-4 flex-shrink-0 pb-3 border-b border-gray-200">
+					<h3 className="text-base font-bold capitalize truncate text-gray-800 tracking-wide">{day}</h3>
+					{day === "sunday" && (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={onReset}
+							className="text-xs h-6 sm:h-7 px-2 sm:px-3 font-medium"
+						>
+							Reset
+						</Button>
+					)}
+				</div>
 
-			<div className="space-y-2 mb-4 flex-1 min-h-0 overflow-y-auto">
-				{tasks.map((task) => (
-					<TaskItem
-						key={task.id}
-						task={task}
-						onToggleComplete={onToggleComplete}
-						onDelete={onDelete}
+				<div className="space-y-3 flex-1 min-h-0 overflow-y-auto py-2">
+					{tasks.map((task) => (
+						<TaskItem
+							key={task.id}
+							task={task}
+							onToggleComplete={onToggleComplete}
+							onDelete={onDelete}
+						/>
+					))}
+				</div>
+
+				<form onSubmit={handleAddTask} className="space-y-3 flex-shrink-0 mt-6 pt-4 border-t border-gray-200">
+					<Input
+						placeholder="Add task..."
+						value={newTaskTitle}
+						onChange={(e) => setNewTaskTitle(e.target.value)}
+						className="text-sm h-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500 bg-white"
 					/>
-				))}
-			</div>
-
-			<form onSubmit={handleAddTask} className="space-y-2 sm:space-y-3 flex-shrink-0">
-				<Input
-					placeholder="Add task..."
-					value={newTaskTitle}
-					onChange={(e) => setNewTaskTitle(e.target.value)}
-					className="text-xs h-8 sm:h-9"
-				/>
-				<Button
-					type="submit"
-					variant="secondary"
-					size="sm"
-					disabled={!newTaskTitle.trim()}
-					className="w-full h-8 sm:h-9 text-xs font-medium"
-				>
-					Add Task
-				</Button>
-			</form>
-		</DroppableZone>
+					<Button
+						type="submit"
+						variant="secondary"
+						size="sm"
+						disabled={!newTaskTitle.trim()}
+						className="w-full h-10 text-sm font-medium bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-200 hover:border-blue-300"
+					>
+						Add Task
+					</Button>
+				</form>
+			</DroppableZone>
+		</div>
 	);
 });
 
@@ -402,7 +405,7 @@ const WeeklyChecklist = () => {
 		>
 			<div className="flex-1 flex flex-col min-h-0">
 				{/* Responsive grid layout - adapts to screen size */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 gap-3 lg:gap-4 h-full">
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7 h-full bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" style={{ display: 'grid', height: '100%', gridTemplateRows: '1fr' }}>
 					{daysOfWeek.map((day) => (
 						<DayColumn
 							key={day}

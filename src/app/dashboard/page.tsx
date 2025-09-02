@@ -165,18 +165,21 @@ export default function Home() {
 			onDragOver={handleDragOver}
 			onDragEnd={handleDragEnd}
 		>
-			<main className="min-h-screen bg-background">
+			<main className="min-h-screen bg-background flex flex-col">
 				<Navigation />
-				<div className="flex flex-col p-6 gap-6">
-					{/* Top row - three cards in a row, equal height */}
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
+				<div className="flex-1 flex flex-col p-6 gap-6 min-h-0">
+					{/* Top row - three cards in a row, shrink as needed */}
+					<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch flex-shrink-0">
 						<Kanban />
 						<TodaysList />
 						<DailyCheckList />
 					</div>
 
-					{/* Bottom section - Weekly Checklist with flexible height */}
-					<div className="flex-1 min-h-0">
+					{/* Flexible gap in the middle */}
+					<div className="flex-1 min-h-6"></div>
+
+					{/* Bottom section - Weekly Checklist anchored to bottom, grows upward */}
+					<div className="flex-shrink-0 h-[40vh] min-h-[400px] max-h-[60vh]">
 						<WeeklyChecklist />
 					</div>
 				</div>
