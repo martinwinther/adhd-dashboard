@@ -7,7 +7,7 @@ run "npm dev" to run the dev server
 ## Features
 
 ### Theme System
-The dashboard supports three different themes that can be switched via the user menu:
+Routine Canvas supports three different themes that can be switched via the user menu:
 
 - **Light Theme**: Clean and bright interface with light backgrounds
 - **Dark Theme**: Easy on the eyes with dark backgrounds  

@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/lib/theme-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ADHD-Dashboard",
-  description: "ADHD management dashboard",
+  title: "Routine Canvas",
+  description: "Your personal productivity companion",
 };
 
 export default function RootLayout({
