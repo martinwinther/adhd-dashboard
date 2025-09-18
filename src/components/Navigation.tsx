@@ -1,6 +1,6 @@
 "use client";
 
-import { UserCircleIcon, ArrowRightOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 import React, { useState, useRef, useEffect } from "react";
 import ThemeSwitcher from "./ThemeSwitcher";
 
@@ -8,8 +8,6 @@ const Navigation = () => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
-
-	const name = "Martin"; // placeholder for user name
 
 	// Close dropdown when clicking outside or pressing Escape
 	useEffect(() => {
@@ -39,18 +37,6 @@ const Navigation = () => {
 		};
 	}, []);
 
-	const handleSignOut = () => {
-		// TODO: Implement sign out functionality
-		console.log("Sign out clicked");
-		setIsDropdownOpen(false);
-	};
-
-	const handleSettings = () => {
-		// TODO: Implement settings functionality
-		console.log("Settings clicked");
-		setIsDropdownOpen(false);
-	};
-
 	return (
 		<div className="fixed top-4 right-4 z-50">
 			{/* User Menu */}
@@ -70,33 +56,9 @@ const Navigation = () => {
 						ref={dropdownRef}
 						className="absolute right-0 mt-2 w-80 bg-surface/95 backdrop-blur-xl rounded-xl shadow-xl border border-accent/60 py-2 z-50 animate-in slide-in-from-top-2 duration-200"
 					>
-						{/* User Info */}
-						<div className="px-4 py-3 border-b border-accent/60">
-							<p className="text-sm font-medium text-primary">{name}</p>
-							<p className="text-xs text-muted">Signed in</p>
-						</div>
-
 						{/* Theme Switcher */}
-						<div className="px-4 py-3 border-b border-accent/60">
+						<div className="px-4 py-3">
 							<ThemeSwitcher />
-						</div>
-
-						{/* Menu Items */}
-						<div className="py-1">
-							<button
-								onClick={handleSettings}
-								className="flex items-center w-full px-4 py-2.5 text-sm text-primary hover:bg-accent/10 transition-colors duration-150 rounded-lg mx-1"
-							>
-								<Cog6ToothIcon className="w-4 h-4 mr-3 text-muted" />
-								Settings
-							</button>
-							<button
-								onClick={handleSignOut}
-								className="flex items-center w-full px-4 py-2.5 text-sm text-primary hover:bg-accent/10 transition-colors duration-150 rounded-lg mx-1"
-							>
-								<ArrowRightOnRectangleIcon className="w-4 h-4 mr-3 text-muted" />
-								Sign Out
-							</button>
 						</div>
 					</div>
 				)}
